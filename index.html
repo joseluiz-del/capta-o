@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Consulta + Captação (Prototype Unificado)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Consulta + Captação (Mobile-Ready)</title>
   <style>
     :root{
       --bg:#0e1116; --panel:#121825; --panel2:#0f1522; --stroke:#22304a;
@@ -15,9 +15,10 @@
     }
     *{box-sizing:border-box}
     body{
-      margin:0; font-family:var(--sans); background:radial-gradient(1200px 800px at 15% -20%, #1a2b5f 0%, transparent 50%),
-                                           radial-gradient(1200px 800px at 115% 0%, #2a1b5f 0%, transparent 45%),
-                                           var(--bg);
+      margin:0; font-family:var(--sans);
+      background:radial-gradient(1200px 800px at 15% -20%, #1a2b5f 0%, transparent 50%),
+                radial-gradient(1200px 800px at 115% 0%, #2a1b5f 0%, transparent 45%),
+                var(--bg);
       color:var(--text);
     }
     a{color:var(--accent); text-decoration:none}
@@ -69,6 +70,7 @@
     .btn{
       border:1px solid var(--stroke); background:rgba(255,255,255,.02); color:var(--text);
       padding:10px 12px; border-radius:12px; cursor:pointer;
+      min-height:44px;
     }
     .btn:hover{border-color:#365a9b}
     .btn.primary{border-color:rgba(110,168,254,.95); background:rgba(110,168,254,.12)}
@@ -86,6 +88,7 @@
     .tab{
       border:1px solid var(--stroke); background:rgba(255,255,255,.02);
       padding:8px 10px; border-radius:12px; cursor:pointer; color:var(--muted); font-size:12px;
+      min-height:40px;
     }
     .tab.active{color:var(--text); border-color:rgba(110,168,254,.95); background:rgba(110,168,254,.10)}
     .grid{ display:grid; grid-template-columns: repeat(12, 1fr); gap:10px; }
@@ -97,6 +100,8 @@
       width:100%; padding:10px 10px; border-radius:12px; border:1px solid var(--stroke);
       background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)), var(--input);
       color:var(--text); outline:none;
+      font-size:16px;
+      min-height:44px;
     }
     textarea{min-height:98px; resize:vertical}
     .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
@@ -130,26 +135,115 @@
     .dot.ok{background:var(--ok)}
     .dot.bad{background:var(--bad)}
     .doc .actions{display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;}
-    .mini{padding:8px 10px; border-radius:12px; border:1px solid var(--stroke); background:transparent; color:var(--text); cursor:pointer; font-size:12px;}
+    .mini{padding:10px 12px; border-radius:12px; border:1px solid var(--stroke); background:transparent; color:var(--text); cursor:pointer; font-size:12px; min-height:40px;}
     .mini:hover{border-color:#365a9b}
     .toggle{display:flex; align-items:center; gap:8px; color:var(--muted); font-size:12px;}
 
     .section{display:none}
     .section.active{display:block}
     .two-col{display:grid; grid-template-columns: 1.15fr .85fr; gap:14px}
+
+    .result-cards{display:none; margin-top:10px; gap:10px}
+    .rcard{
+      border:1px solid var(--stroke); background:rgba(255,255,255,.02); border-radius:14px;
+      padding:12px; cursor:pointer;
+    }
+    .rcard:hover{border-color:#365a9b}
+    .rcard.active{border-color:rgba(110,168,254,.95); background:rgba(110,168,254,.10)}
+    .rcard .t{display:flex; justify-content:space-between; gap:8px; align-items:flex-start}
+    .rcard .t b{font-family:var(--mono); font-size:12px}
+    .rcard .t span{font-size:11px; color:var(--muted)}
+    .rcard .m{margin-top:6px; color:var(--muted); font-size:12px; line-height:1.25}
+
+    .m-topbar{display:none}
+    .drawer,.backdrop,.bottom-nav,.action-bar{display:none}
+
     @media (max-width: 1000px){
       .app{grid-template-columns:1fr}
-      .sidebar{border-right:none; border-bottom:1px solid var(--stroke)}
+      .sidebar{display:none}
+      .main{padding:12px; padding-bottom: calc(84px + env(safe-area-inset-bottom));}
+      .topbar{display:none}
+
+      .m-topbar{
+        display:flex; align-items:center; justify-content:space-between; gap:10px;
+        position:sticky; top:0; z-index:60;
+        margin:0 0 12px;
+        padding:10px 10px;
+        border:1px solid var(--stroke);
+        border-radius:var(--r);
+        background:rgba(18,24,37,.92);
+        backdrop-filter: blur(8px);
+        box-shadow: var(--shadow);
+      }
+      .m-title{display:flex; flex-direction:column; gap:2px}
+      .m-title b{font-size:14px}
+      .m-title small{font-size:12px; color:var(--muted)}
+      .icon-btn{
+        min-width:44px; height:44px; border-radius:12px;
+        border:1px solid var(--stroke); background:rgba(255,255,255,.02);
+        color:var(--text); cursor:pointer;
+      }
+
+      .drawer{
+        display:block;
+        position:fixed; left:0; top:0; height:100vh;
+        width:min(86vw, 360px);
+        transform:translateX(-102%);
+        transition:transform .18s ease;
+        z-index:90;
+        background:linear-gradient(180deg, rgba(18,24,37,.98), rgba(18,24,37,.92));
+        border-right:1px solid var(--stroke);
+        padding:14px;
+        overflow:auto;
+      }
+      .drawer.open{transform:translateX(0)}
+      .backdrop{
+        display:block;
+        position:fixed; inset:0; z-index:80;
+        background:rgba(0,0,0,.45);
+        opacity:0; pointer-events:none;
+        transition:opacity .18s ease;
+      }
+      .backdrop.show{opacity:1; pointer-events:auto}
+
+      .bottom-nav{
+        display:grid;
+        grid-template-columns: repeat(5, 1fr);
+        position:fixed; left:0; right:0; bottom:0; z-index:70;
+        background:rgba(18,24,37,.95);
+        border-top:1px solid var(--stroke);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+      .bottom-nav button{
+        height:56px; border:0; background:transparent; color:var(--muted);
+        font-size:11px; cursor:pointer;
+      }
+      .bottom-nav button.active{color:var(--text)}
+      .bottom-nav button span{display:block; font-size:18px; line-height:18px; margin-bottom:4px}
+
+      .action-bar{
+        display:flex; gap:10px;
+        position:fixed; left:12px; right:12px;
+        bottom: calc(56px + 10px + env(safe-area-inset-bottom));
+        z-index:75;
+      }
+      .action-bar .btn{flex:1}
+
       .two-col{grid-template-columns:1fr}
-      .doc{grid-template-columns: 1fr}
+      .doc{grid-template-columns:1fr}
       .status,.doc .actions{justify-content:flex-start}
+
+      #resultList{display:none}
+      .result-cards{display:flex; flex-direction:column}
+      .tabs{flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch}
+      .tabs::-webkit-scrollbar{height:0}
     }
 
     .toast{
-      position:fixed; right:18px; bottom:18px;
+      position:fixed; right:18px; bottom: calc(18px + env(safe-area-inset-bottom));
       padding:12px 14px; border-radius:14px; border:1px solid var(--stroke);
       background:rgba(18,24,37,.92); box-shadow: var(--shadow); color:var(--text);
-      display:none; max-width: 420px;
+      display:none; max-width: 420px; z-index:120;
     }
     .toast.show{display:block}
     .toast small{color:var(--muted); display:block; margin-top:3px}
@@ -157,35 +251,43 @@
 </head>
 <body>
 <div class="app">
-  <aside class="sidebar">
+  <aside class="sidebar" aria-label="Menu">
     <div class="brand">
       <div class="logo">CX</div>
       <div>
-        <h1>Consulta + Captação (Unificado)</h1>
-        <p>Prototype navegável • abas preenchidas • anexo documental</p>
+        <h1>Consulta + Captação</h1>
+        <p>Mobile-ready • navegação + abas + anexos</p>
       </div>
     </div>
 
     <nav class="nav">
       <button data-section="consulta" class="active">Consulta (Siscomex-like) <span class="pill">CTRL+1</span></button>
       <button data-section="captacao">Captação / Pré-aviso <span class="pill">CTRL+2</span></button>
-      <button data-section="documentos">📂 Upload documental inteligente <span class="pill">CTRL+3</span></button>
-      <button data-section="eventos">Eventos & trilha (RFB/PCS) <span class="pill">CTRL+4</span></button>
+      <button data-section="documentos">📂 Documentos <span class="pill">CTRL+3</span></button>
+      <button data-section="eventos">Eventos <span class="pill">CTRL+4</span></button>
       <button data-section="config">Configurações <span class="pill">CTRL+5</span></button>
     </nav>
 
     <div class="meta">
-      <b>Dica:</b> arquivo <i>single-file</i> (bom p/ GitHub/Netlify).<br/>
-      Atalhos <span class="kbd">Ctrl</span>+<span class="kbd">1..5</span>.<br/>
+      <b>Mobile:</b> drawer + bottom nav + cards (resultados).<br/>
       Estado em <span class="kbd">localStorage</span>.
     </div>
   </aside>
 
   <main class="main">
+    <div class="m-topbar" role="banner">
+      <button class="icon-btn" id="btnMenu" aria-label="Abrir menu">☰</button>
+      <div class="m-title">
+        <b id="mPageTitle">Consulta</b>
+        <small id="mPageSubtitle">Siscomex-like</small>
+      </div>
+      <button class="icon-btn" id="btnQuick" aria-label="Ações rápidas">⚡</button>
+    </div>
+
     <header class="topbar">
       <div class="title">
         <h2 id="pageTitle">Consulta (Siscomex-like)</h2>
-        <span id="pageSubtitle">Navegabilidade do app 1 + preenchimentos e UX documental do app 2</span>
+        <span id="pageSubtitle">Seleção → preenche abas e docs</span>
       </div>
       <div class="actions">
         <button class="btn ghost" id="btnLoadSample">Carregar dataset exemplo</button>
@@ -231,6 +333,7 @@
               <div class="field span-12">
                 <label>Resultados</label>
                 <select id="resultList" size="9" style="height:220px; font-family:var(--mono);"></select>
+                <div class="result-cards" id="resultCards"></div>
                 <p class="hint" style="margin-top:8px;">Selecionar um item atualiza as abas e o vínculo operacional de documentos.</p>
               </div>
             </div>
@@ -327,8 +430,8 @@
           <div class="separator"></div>
           <div class="row">
             <button class="btn primary" id="btnSaveCap">Salvar abas</button>
-            <button class="btn" id="btnPrefillCap">Pré-preencher (exemplo)</button>
-            <span class="hint">Atalho: <span class="kbd">Ctrl</span>+<span class="kbd">S</span> (nesta seção)</span>
+            <button class="btn" id="btnPrefillCap">Pré-preencher</button>
+            <span class="hint">Atalho: <span class="kbd">Ctrl</span>+<span class="kbd">S</span></span>
           </div>
         </div>
       </section>
@@ -346,7 +449,9 @@
               </div>
               <div class="row">
                 <input id="fileInput" type="file" multiple style="display:none" accept=".pdf,.png,.jpg,.jpeg,.xml" />
-                <button class="btn primary" id="btnPickFiles">Selecionar arquivos</button>
+                <input id="fileInputCamera" type="file" multiple style="display:none" accept="image/*,application/pdf" capture="environment" />
+                <button class="btn primary" id="btnPickFiles">Selecionar</button>
+                <button class="btn" id="btnPickCamera">Câmera</button>
                 <button class="btn" id="btnAutoClassify">🧠 Classificar</button>
               </div>
             </div>
@@ -368,14 +473,14 @@
 
             <div class="toggle">
               <input type="checkbox" id="toggleStrict" />
-              <label for="toggleStrict" style="margin:0">Exigir checklist completo (modo treinamento)</label>
+              <label for="toggleStrict" style="margin:0">Exigir checklist completo</label>
             </div>
 
             <div class="separator"></div>
 
             <div class="row">
-              <button class="btn primary" id="btnBindAll">Vincular docs ao registro ativo</button>
-              <button class="btn" id="btnClearDocs">Limpar documentos</button>
+              <button class="btn primary" id="btnBindAll">Vincular docs</button>
+              <button class="btn" id="btnClearDocs">Limpar</button>
             </div>
           </div>
         </div>
@@ -401,8 +506,8 @@
             </div>
             <div class="field span-6"><label>Mensagem</label><input id="evtMsg" placeholder="Ex.: Documento fiscal validado..." /></div>
             <div class="field span-12">
-              <button class="btn primary" id="btnAddEvent">Adicionar evento</button>
-              <button class="btn" id="btnClearEvents">Limpar eventos</button>
+              <button class="btn primary" id="btnAddEvent">Adicionar</button>
+              <button class="btn" id="btnClearEvents">Limpar</button>
             </div>
             <div class="field span-12"><label>Log</label><textarea id="evtLog" style="min-height:260px; font-family:var(--mono)" readonly></textarea></div>
           </div>
@@ -411,8 +516,8 @@
 
       <section class="section" id="section-config">
         <div class="card">
-          <h3>Configurações do protótipo</h3>
-          <p class="sub">Ajustes para treinamento e demonstração.</p>
+          <h3>Configurações</h3>
+          <p class="sub">Preferências e ações gerais.</p>
 
           <div class="grid">
             <div class="field span-6">
@@ -430,6 +535,15 @@
               </select>
             </div>
             <div class="field span-12"><label>Notas do instrutor</label><textarea id="cfgNotes"></textarea></div>
+
+            <div class="field span-12">
+              <div class="row">
+                <button class="btn ghost" id="btnLoadSample2">Carregar dataset</button>
+                <button class="btn" id="btnExport2">Exportar JSON</button>
+                <button class="btn primary" id="btnReset2">Reset</button>
+              </div>
+            </div>
+
             <div class="field span-12"><button class="btn primary" id="btnSaveCfg">Salvar configurações</button></div>
           </div>
         </div>
@@ -439,17 +553,50 @@
   </main>
 </div>
 
+<div id="backdrop" class="backdrop" aria-hidden="true"></div>
+<aside id="drawer" class="drawer" aria-label="Menu mobile">
+  <div class="brand" style="margin-bottom:12px;">
+    <div class="logo">CX</div>
+    <div>
+      <h1 style="margin:0; font-size:14px;">Consulta + Captação</h1>
+      <p style="margin:2px 0 0; font-size:12px; color:var(--muted);">Menu mobile</p>
+    </div>
+  </div>
+  <nav class="nav" id="drawerNav">
+    <button data-section="consulta" class="active">Consulta <span class="pill">1</span></button>
+    <button data-section="captacao">Captação <span class="pill">2</span></button>
+    <button data-section="documentos">Docs <span class="pill">3</span></button>
+    <button data-section="eventos">Eventos <span class="pill">4</span></button>
+    <button data-section="config">Config <span class="pill">5</span></button>
+  </nav>
+  <div class="meta" style="margin-top:12px;">Dica: use a barra inferior para navegar.</div>
+</aside>
+
+<div class="action-bar" id="actionBar">
+  <button class="btn primary" id="mPrimary">Ação</button>
+  <button class="btn" id="mSecondary">Secundária</button>
+</div>
+
+<nav class="bottom-nav" aria-label="Navegação mobile">
+  <button data-go="consulta" class="active"><span>🔎</span>Consulta</button>
+  <button data-go="captacao"><span>🧾</span>Captação</button>
+  <button data-go="documentos"><span>📎</span>Docs</button>
+  <button data-go="eventos"><span>🧩</span>Eventos</button>
+  <button data-go="config"><span>⚙️</span>Config</button>
+</nav>
+
 <div class="toast" id="toast"></div>
 
 <script>
-const LS={dataset:"cx.dataset.v1",selected:"cx.selected.v1",captacao:"cx.captacao.v1",documentos:"cx.documentos.v1",eventos:"cx.eventos.v1",config:"cx.config.v1"};
+const LS={dataset:"cx.dataset.v2",selected:"cx.selected.v2",captacao:"cx.captacao.v2",documentos:"cx.documentos.v2",eventos:"cx.eventos.v2",config:"cx.config.v2"};
 const el=(id)=>document.getElementById(id);
 const escapeHtml=(s)=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const toast=(title,msg="")=>{const t=el("toast");t.innerHTML=`<b>${escapeHtml(title)}</b>${msg?`<small>${escapeHtml(msg)}</small>`:""}`;t.classList.add("show");clearTimeout(window.__t);window.__t=setTimeout(()=>t.classList.remove("show"),2400);};
+const toast=(title,msg="")=>{const t=el("toast");t.innerHTML=`<b>${escapeHtml(title)}</b>${msg?`<small>${escapeHtml(msg)}</small>`:""}`;t.classList.add("show");clearTimeout(window.__t);window.__t=setTimeout(()=>t.classList.remove("show"),2200);};
 const nowIso=()=>new Date().toISOString();
 const shortTs=()=>new Date().toISOString().replace("T"," ").slice(0,19);
-const defaultConfig={mode:"treinamento",autosave:"on",notes:""};
+const isMobile=()=>window.matchMedia && window.matchMedia("(max-width: 1000px)").matches;
 
+const defaultConfig={mode:"treinamento",autosave:"on",notes:""};
 function loadConfig(){const cfg=JSON.parse(localStorage.getItem(LS.config)||"null")||defaultConfig;el("cfgMode").value=cfg.mode||"treinamento";el("cfgAutosave").value=cfg.autosave||"on";el("cfgNotes").value=cfg.notes||"";return cfg;}
 function saveConfig(){const cfg={mode:el("cfgMode").value,autosave:el("cfgAutosave").value,notes:el("cfgNotes").value};localStorage.setItem(LS.config,JSON.stringify(cfg));toast("Configurações salvas");return cfg;}
 
@@ -461,7 +608,11 @@ function sampleDataset(){return[
 ];}
 function loadDataset(){return JSON.parse(localStorage.getItem(LS.dataset)||"null")||[];}
 function saveDataset(arr){localStorage.setItem(LS.dataset,JSON.stringify(arr||[]));}
-function setSelected(obj){localStorage.setItem(LS.selected,JSON.stringify(obj||null));renderSnapshot(obj);renderLinkage(obj);}
+function setSelected(obj){
+  localStorage.setItem(LS.selected,JSON.stringify(obj||null));
+  renderSnapshot(obj); renderLinkage(obj);
+  highlightSelectedCard(obj?.id);
+}
 function getSelected(){return JSON.parse(localStorage.getItem(LS.selected)||"null");}
 
 function renderSnapshot(obj){
@@ -475,16 +626,67 @@ function renderLinkage(obj){
 }
 function populateResults(list){
   const box=el("resultList"); box.innerHTML="";
-  list.forEach(item=>{const opt=document.createElement("option");opt.value=item.id;opt.textContent=`[${item.type}] ${item.id} • ${item.status} • ${item.party}`;box.appendChild(opt);});
+  list.forEach(item=>{
+    const opt=document.createElement("option");
+    opt.value=item.id;
+    opt.textContent=`[${item.type}] ${item.id} • ${item.status} • ${item.party}`;
+    box.appendChild(opt);
+  });
+
+  const cards=el("resultCards"); cards.innerHTML="";
+  list.forEach(item=>{
+    const div=document.createElement("div");
+    div.className="rcard";
+    div.dataset.id=item.id;
+    div.innerHTML=`
+      <div class="t">
+        <b>[${escapeHtml(item.type)}] ${escapeHtml(item.id)}</b>
+        <span>${escapeHtml(item.status)}</span>
+      </div>
+      <div class="m">${escapeHtml(item.party)}<br/>${escapeHtml(item.vessel)}</div>
+    `;
+    div.addEventListener("click",()=>{
+      const ds=loadDataset();
+      const obj=ds.find(x=>x.id===item.id);
+      if(obj) setSelected(obj);
+      toast("Selecionado", item.id);
+    });
+    cards.appendChild(div);
+  });
+
   el("resultCount").textContent=String(list.length);
+
+  if(list[0]){
+    el("resultList").value=list[0].id;
+    highlightSelectedCard(getSelected()?.id || list[0].id);
+  }
 }
+function highlightSelectedCard(id){
+  const cards=el("resultCards");
+  if(!cards) return;
+  cards.querySelectorAll(".rcard").forEach(c=>c.classList.toggle("active", c.dataset.id===id));
+}
+
 function search(){
-  const ds=loadDataset(); const q=el("searchBox").value.trim().toLowerCase(); const type=el("entityType").value;
+  const ds=loadDataset();
+  const q=el("searchBox").value.trim().toLowerCase();
+  const type=el("entityType").value;
   const filtered=ds.filter(x=>x.type===type && (!q || (`${x.id} ${x.status} ${x.vessel} ${x.party} ${x.notes} ${JSON.stringify(x.links||{})}`.toLowerCase().includes(q))));
-  populateResults(filtered); if(filtered[0]) setSelected(filtered[0]); toast("Busca concluída", `${filtered.length} registro(s)`);
+  populateResults(filtered);
+  if(filtered[0]) setSelected(filtered[0]);
+  toast("Busca concluída", `${filtered.length} registro(s)`);
 }
-function loadSample(){const ds=sampleDataset();saveDataset(ds);populateResults(ds.filter(x=>x.type===el("entityType").value));setSelected(ds[0]);toast("Dataset carregado");}
-function resetAll(){Object.values(LS).forEach(k=>localStorage.removeItem(k));location.hash="";location.reload();}
+function loadSample(){
+  const ds=sampleDataset();
+  saveDataset(ds);
+  populateResults(ds.filter(x=>x.type===el("entityType").value));
+  setSelected(ds[0]);
+  toast("Dataset carregado");
+}
+function resetAll(){
+  Object.values(LS).forEach(k=>localStorage.removeItem(k));
+  location.hash=""; location.reload();
+}
 
 /* Captação */
 function getCaptacao(){return JSON.parse(localStorage.getItem(LS.captacao)||"null")||{};}
@@ -522,13 +724,31 @@ function propagateToCaptacao(sel,force=false){
 function getDocs(){return JSON.parse(localStorage.getItem(LS.documentos)||"null")||[];}
 function saveDocs(d){localStorage.setItem(LS.documentos,JSON.stringify(d||[]));}
 function humanSize(b){if(b<1024) return b+" B"; const kb=b/1024; if(kb<1024) return kb.toFixed(1)+" KB"; return (kb/1024).toFixed(2)+" MB";}
-function guessClass(name){const n=name.toLowerCase(); if(n.includes("invoice")||n.includes("fatura")||n.includes("nf")||n.endsWith(".xml")) return "FISCAL"; if(n.includes("packing")) return "PACKING_LIST"; if(n.includes("bl")) return "BL"; if(n.includes("ce")) return "CE"; if(n.includes("due")) return "DUE"; if(n.includes("eir")||n.includes("gate")) return "EIR"; if(n.includes("foto")||n.includes("image")||n.endsWith(".jpg")||n.endsWith(".png")||n.endsWith(".jpeg")) return "IMAGEM"; return "OUTROS";}
-function docStatus(doc){const strict=el("toggleStrict").checked; const hasLink=!!doc.linkRef; const hasClass=!!doc.classification; if(!hasLink||!hasClass) return {level:"warn",label:"Pendente vínculo/classificação"}; if(strict) return {level:"ok",label:"Válido (modo estrito)"}; return {level:"ok",label:"Válido"};}
+function guessClass(name){
+  const n=name.toLowerCase();
+  if(n.includes("invoice")||n.includes("fatura")||n.includes("nf")||n.endsWith(".xml")) return "FISCAL";
+  if(n.includes("packing")) return "PACKING_LIST";
+  if(n.includes("bl")) return "BL";
+  if(n.includes("ce")) return "CE";
+  if(n.includes("due")) return "DUE";
+  if(n.includes("eir")||n.includes("gate")) return "EIR";
+  if(n.includes("foto")||n.includes("image")||n.endsWith(".jpg")||n.endsWith(".png")||n.endsWith(".jpeg")) return "IMAGEM";
+  return "OUTROS";
+}
+function docStatus(doc){
+  const strict=el("toggleStrict").checked;
+  const hasLink=!!doc.linkRef;
+  const hasClass=!!doc.classification;
+  if(!hasLink||!hasClass) return {level:"warn",label:"Pendente vínculo/classificação"};
+  if(strict) return {level:"ok",label:"Válido (modo estrito)"};
+  return {level:"ok",label:"Válido"};
+}
 function renderDocs(){
   const docs=getDocs(); const list=el("docList"); list.innerHTML="";
   if(!docs.length){list.innerHTML=`<div class="hint">Nenhum documento anexado ainda.</div>`; return;}
   docs.slice().reverse().forEach(doc=>{
-    const s=docStatus(doc); const dotClass=s.level==="ok"?"ok":(s.level==="bad"?"bad":"");
+    const s=docStatus(doc);
+    const dotClass=s.level==="ok"?"ok":(s.level==="bad"?"bad":"");
     const row=document.createElement("div"); row.className="doc";
     row.innerHTML=`
       <div>
@@ -550,88 +770,174 @@ function renderDocs(){
   });
 }
 function addFiles(fileList){
-  const docs=getDocs(); const sel=getSelected();
+  const docs=getDocs();
+  const sel=getSelected();
   Array.from(fileList).forEach(f=>docs.push({id:crypto.randomUUID(),name:f.name,size:f.size,mime:f.type||"application/octet-stream",classification:"",linkRef:sel?.id||"",linkType:sel?.type||"",addedAt:Date.now()}));
-  saveDocs(docs); renderDocs(); toast("Arquivos adicionados", `${fileList.length} arquivo(s)`);
+  saveDocs(docs); renderDocs();
+  toast("Arquivos adicionados", `${fileList.length} arquivo(s)`);
 }
 function bindDoc(id){
   const docs=getDocs(); const sel=getSelected(); const d=docs.find(x=>x.id===id);
   if(!d){toast("Documento não encontrado");return;}
   if(!sel){toast("Nenhum registro ativo","Selecione um item em Consulta.");return;}
-  d.linkRef=sel.id; d.linkType=sel.type; saveDocs(docs); renderDocs(); toast("Vinculado", `${d.name} → ${sel.id}`);
+  d.linkRef=sel.id; d.linkType=sel.type;
+  saveDocs(docs); renderDocs();
+  toast("Vinculado", `${d.name} → ${sel.id}`);
 }
 function classifyDoc(id){
   const docs=getDocs(); const d=docs.find(x=>x.id===id);
   if(!d){toast("Documento não encontrado");return;}
-  d.classification=guessClass(d.name); saveDocs(docs); renderDocs(); toast("Classificação sugerida", `${d.name}: ${d.classification}`);
+  d.classification=guessClass(d.name);
+  saveDocs(docs); renderDocs();
+  toast("Classificação sugerida", `${d.name}: ${d.classification}`);
 }
 function removeDoc(id){saveDocs(getDocs().filter(x=>x.id!==id)); renderDocs(); toast("Documento removido");}
 function bindAllDocs(){
   const docs=getDocs(); const sel=getSelected();
   if(!sel){toast("Nenhum registro ativo","Selecione um item em Consulta.");return;}
   docs.forEach(d=>{d.linkRef=sel.id; d.linkType=sel.type;});
-  saveDocs(docs); renderDocs(); toast("Docs vinculados", `Todos → ${sel.id}`);
+  saveDocs(docs); renderDocs();
+  toast("Docs vinculados", `Todos → ${sel.id}`);
 }
-function autoClassifyAll(){const docs=getDocs(); docs.forEach(d=>{if(!d.classification) d.classification=guessClass(d.name);}); saveDocs(docs); renderDocs(); toast("Classificação aplicada");}
+function autoClassifyAll(){
+  const docs=getDocs();
+  docs.forEach(d=>{if(!d.classification) d.classification=guessClass(d.name);});
+  saveDocs(docs); renderDocs();
+  toast("Classificação aplicada");
+}
 
 /* Eventos */
 function getEvents(){return JSON.parse(localStorage.getItem(LS.eventos)||"null")||[];}
 function saveEvents(e){localStorage.setItem(LS.eventos,JSON.stringify(e||[]));}
-function renderEvents(){const ev=getEvents(); el("evtLog").value=ev.map(x=>`${x.ts}  |  ${x.type.padEnd(18)} |  ref=${x.ref||"-"}  |  ${x.msg||""}`).join("\n");}
+function renderEvents(){
+  const ev=getEvents();
+  el("evtLog").value=ev.map(x=>`${x.ts}  |  ${x.type.padEnd(18)} |  ref=${x.ref||"-"}  |  ${x.msg||""}`).join("\n");
+}
 function addEvent(){
-  const sel=getSelected(); const ev={ts:shortTs(),type:el("evtType").value,ref:sel?.id||"",msg:el("evtMsg").value.trim()};
-  const arr=getEvents(); arr.push(ev); saveEvents(arr); renderEvents(); el("evtMsg").value=""; toast("Evento registrado", ev.type+(ev.ref?` • ${ev.ref}`:""));
+  const sel=getSelected();
+  const ev={ts:shortTs(),type:el("evtType").value,ref:sel?.id||"",msg:el("evtMsg").value.trim()};
+  const arr=getEvents(); arr.push(ev);
+  saveEvents(arr); renderEvents();
+  el("evtMsg").value="";
+  toast("Evento registrado", ev.type+(ev.ref?` • ${ev.ref}`:""));
 }
 
 const titles={
-  consulta:["Consulta (Siscomex-like)","Navegabilidade do app 1 + preenchimentos e UX documental do app 2"],
-  captacao:["Captação / Pré-aviso","Abas com preenchimento, salvas em localStorage"],
-  documentos:["📂 Upload documental inteligente","Drag & drop, classificação sugerida e vínculo operacional"],
-  eventos:["Eventos & trilha","Log para simular PCS/RFB/TOS"],
-  config:["Configurações","Ajustes para treinamento e demo"]
+  consulta:["Consulta (Siscomex-like)","Seleção → preenche abas e docs"],
+  captacao:["Captação / Pré-aviso","Tabs roláveis no mobile + autosave"],
+  documentos:["📂 Documentos","Upload + câmera + vínculo operacional"],
+  eventos:["Eventos & trilha","Log PCS/RFB/TOS"],
+  config:["Configurações","Preferências e ações gerais"]
 };
+function updateTitles(key){
+  el("pageTitle").textContent=titles[key]?.[0]||"Tela";
+  el("pageSubtitle").textContent=titles[key]?.[1]||"";
+  el("mPageTitle").textContent=(titles[key]?.[0]||"Tela").replace(" (Siscomex-like)","");
+  el("mPageSubtitle").textContent=titles[key]?.[1]||"";
+}
 function activateSection(key){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   el(`section-${key}`).classList.add("active");
-  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active", b.dataset.section===key));
-  el("pageTitle").textContent=titles[key]?.[0]||"Tela";
-  el("pageSubtitle").textContent=titles[key]?.[1]||"";
+  document.querySelectorAll(".sidebar .nav button").forEach(b=>b.classList.toggle("active", b.dataset.section===key));
+  document.querySelectorAll("#drawerNav button").forEach(b=>b.classList.toggle("active", b.dataset.section===key));
+  document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.toggle("active", b.dataset.go===key));
+  updateTitles(key);
   location.hash=key;
+  syncActionBar(key);
 }
+window.activateSection=activateSection;
+
 function activateCapTab(tab){
   document.querySelectorAll("#capTabs .tab").forEach(t=>t.classList.toggle("active", t.dataset.tab===tab));
   document.querySelectorAll(".capTab").forEach(div=>div.style.display="none");
   const target=el(`capTab-${tab}`); if(target) target.style.display="block";
 }
+
 function exportJson(){
   const payload={exportedAt:nowIso(),dataset:loadDataset(),selected:getSelected(),captacao:getCaptacao(),documentos:getDocs(),eventos:getEvents(),config:JSON.parse(localStorage.getItem(LS.config)||"null")||defaultConfig};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`consulta_captacao_export_${new Date().toISOString().slice(0,10)}.json`;
-  document.body.appendChild(a); a.click(); a.remove(); toast("Exportado","JSON baixado.");
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`consulta_captacao_export_${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  toast("Exportado","JSON baixado.");
 }
-function wire(){
-  document.querySelectorAll(".nav button").forEach(btn=>btn.addEventListener("click",()=>activateSection(btn.dataset.section)));
-  const hash=(location.hash||"").replace("#",""); if(hash && titles[hash]) activateSection(hash);
 
+/* Mobile shell */
+function openDrawer(){el("drawer").classList.add("open"); el("backdrop").classList.add("show");}
+function closeDrawer(){el("drawer").classList.remove("open"); el("backdrop").classList.remove("show");}
+function syncActionBar(sectionKey){
+  const ab=el("actionBar");
+  if(!ab) return;
+  if(!isMobile()){ab.style.display="none"; return;}
+  ab.style.display="flex";
+  const p=el("mPrimary"), s=el("mSecondary");
+  p.textContent="Carregar dataset"; p.onclick=loadSample;
+  s.textContent="Exportar JSON"; s.onclick=exportJson;
+
+  if(sectionKey==="consulta"){p.textContent="Buscar"; p.onclick=search; s.textContent="Dataset"; s.onclick=loadSample;}
+  if(sectionKey==="captacao"){p.textContent="Salvar"; p.onclick=saveCaptacao; s.textContent="Pré-preencher"; s.onclick=()=>propagateToCaptacao(getSelected(),true);}
+  if(sectionKey==="documentos"){p.textContent="Vincular docs"; p.onclick=bindAllDocs; s.textContent="Classificar"; s.onclick=autoClassifyAll;}
+  if(sectionKey==="eventos"){p.textContent="Adicionar evento"; p.onclick=addEvent; s.textContent="Limpar log"; s.onclick=()=>{localStorage.removeItem(LS.eventos); renderEvents(); toast("Eventos limpos");};}
+  if(sectionKey==="config"){p.textContent="Salvar config"; p.onclick=saveConfig; s.textContent="Reset"; s.onclick=resetAll;}
+}
+
+function wire(){
+  // Desktop nav
+  document.querySelectorAll(".sidebar .nav button").forEach(btn=>btn.addEventListener("click",()=>activateSection(btn.dataset.section)));
+  // Drawer nav
+  document.querySelectorAll("#drawerNav button").forEach(btn=>btn.addEventListener("click",()=>{activateSection(btn.dataset.section); closeDrawer();}));
+  // Bottom nav
+  document.querySelectorAll(".bottom-nav button").forEach(btn=>btn.addEventListener("click",()=>activateSection(btn.dataset.go)));
+
+  // Mobile controls
+  el("btnMenu").addEventListener("click",openDrawer);
+  el("backdrop").addEventListener("click",closeDrawer);
+  el("btnQuick").addEventListener("click",()=>{const cur=(location.hash||"#consulta").replace("#",""); syncActionBar(cur); toast("Ações rápidas","Use os botões acima da barra inferior.");});
+
+  // Hash init
+  const hash=(location.hash||"").replace("#","");
+  if(hash && titles[hash]) activateSection(hash);
+
+  // Keyboard shortcuts
   window.addEventListener("keydown",(e)=>{
     if(e.ctrlKey && !e.shiftKey && !e.altKey){
-      if(e.key>="1" && e.key<="5"){e.preventDefault(); const map={"1":"consulta","2":"captacao","3":"documentos","4":"eventos","5":"config"}; activateSection(map[e.key]);}
-      if(e.key.toLowerCase()==="s"){const cur=(location.hash||"#consulta").replace("#",""); if(cur==="captacao"){e.preventDefault(); saveCaptacao();}}
+      if(e.key>="1" && e.key<="5"){
+        e.preventDefault();
+        const map={"1":"consulta","2":"captacao","3":"documentos","4":"eventos","5":"config"};
+        activateSection(map[e.key]);
+      }
+      if(e.key.toLowerCase()==="s"){
+        const cur=(location.hash||"#consulta").replace("#","");
+        if(cur==="captacao"){e.preventDefault(); saveCaptacao();}
+      }
     }
+    if(e.key==="Escape"){closeDrawer();}
   });
 
+  // Consulta
   el("entityType").addEventListener("change",()=>populateResults(loadDataset().filter(x=>x.type===el("entityType").value)));
   el("btnSearch").addEventListener("click",search);
   el("btnClearSearch").addEventListener("click",()=>{el("searchBox").value=""; search();});
-  el("resultList").addEventListener("change",()=>{const ds=loadDataset(); const id=el("resultList").value; const obj=ds.find(x=>x.id===id); if(obj) setSelected(obj);});
+  el("resultList").addEventListener("change",()=>{
+    const ds=loadDataset();
+    const id=el("resultList").value;
+    const obj=ds.find(x=>x.id===id);
+    if(obj) setSelected(obj);
+  });
 
+  // Captação tabs
   document.querySelectorAll("#capTabs .tab").forEach(t=>t.addEventListener("click",()=>activateCapTab(t.dataset.tab)));
   el("btnSaveCap").addEventListener("click",saveCaptacao);
   el("btnPrefillCap").addEventListener("click",()=>propagateToCaptacao(getSelected(),true));
   document.querySelectorAll("#section-captacao input, #section-captacao select, #section-captacao textarea").forEach(n=>n.addEventListener("input",()=>{if(loadConfig().autosave==="on") saveCaptacao();}));
 
+  // Docs
   el("btnPickFiles").addEventListener("click",()=>el("fileInput").click());
+  el("btnPickCamera").addEventListener("click",()=>el("fileInputCamera").click());
   el("fileInput").addEventListener("change",(e)=>{if(e.target.files?.length) addFiles(e.target.files); e.target.value="";});
+  el("fileInputCamera").addEventListener("change",(e)=>{if(e.target.files?.length) addFiles(e.target.files); e.target.value="";});
+
   const dz=el("dropzone");
   ["dragenter","dragover"].forEach(evt=>dz.addEventListener(evt,(e)=>{e.preventDefault(); e.stopPropagation(); dz.classList.add("dragover");}));
   ["dragleave","drop"].forEach(evt=>dz.addEventListener(evt,(e)=>{e.preventDefault(); e.stopPropagation(); dz.classList.remove("dragover");}));
@@ -640,24 +946,52 @@ function wire(){
   el("btnAutoClassify").addEventListener("click",autoClassifyAll);
   el("btnBindAll").addEventListener("click",bindAllDocs);
   el("btnClearDocs").addEventListener("click",()=>{localStorage.removeItem(LS.documentos); renderDocs(); toast("Documentos limpos");});
-  el("docList").addEventListener("click",(e)=>{const b=e.target.closest("button"); if(!b) return; const act=b.dataset.act; const id=b.dataset.id; if(act==="bind") bindDoc(id); if(act==="classify") classifyDoc(id); if(act==="remove") removeDoc(id);});
+  el("docList").addEventListener("click",(e)=>{
+    const b=e.target.closest("button"); if(!b) return;
+    const act=b.dataset.act; const id=b.dataset.id;
+    if(act==="bind") bindDoc(id);
+    if(act==="classify") classifyDoc(id);
+    if(act==="remove") removeDoc(id);
+  });
 
+  // Eventos
   el("btnAddEvent").addEventListener("click",addEvent);
   el("btnClearEvents").addEventListener("click",()=>{localStorage.removeItem(LS.eventos); renderEvents(); toast("Eventos limpos");});
 
+  // Config / desktop actions
   el("btnSaveCfg").addEventListener("click",saveConfig);
   el("btnLoadSample").addEventListener("click",loadSample);
   el("btnExport").addEventListener("click",exportJson);
   el("btnReset").addEventListener("click",resetAll);
+
+  // Config duplicate buttons
+  el("btnLoadSample2").addEventListener("click",loadSample);
+  el("btnExport2").addEventListener("click",exportJson);
+  el("btnReset2").addEventListener("click",resetAll);
+
+  // responsive action bar
+  window.addEventListener("resize",()=>{
+    const cur=(location.hash||"#consulta").replace("#","");
+    syncActionBar(cur);
+  });
 }
 
 function init(){
   loadConfig(); loadCaptacaoIntoForm();
   const ds=loadDataset();
-  if(!ds.length){populateResults([]); renderSnapshot(null); renderLinkage(null);}
-  else {populateResults(ds.filter(x=>x.type===el("entityType").value)); setSelected(getSelected()||ds[0]);}
-  renderDocs(); renderEvents(); wire(); renderLinkage(getSelected());
-  if(!loadDataset().length) toast("Protótipo pronto","Clique em “Carregar dataset exemplo”.");
+  if(!ds.length){
+    populateResults([]);
+    renderSnapshot(null); renderLinkage(null);
+  } else {
+    populateResults(ds.filter(x=>x.type===el("entityType").value));
+    setSelected(getSelected()||ds[0]);
+  }
+  renderDocs(); renderEvents();
+  wire();
+  const cur=(location.hash||"#consulta").replace("#","");
+  updateTitles(cur);
+  syncActionBar(cur);
+  if(!loadDataset().length) toast("Protótipo pronto","No mobile: use ‘Dataset’ e navegue na barra inferior.");
 }
 init();
 </script>
