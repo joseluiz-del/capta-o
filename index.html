@@ -1,333 +1,665 @@
-<!DOCTYPE html>
-<!-- saved from url=(0108)file:///C:/Users/HxTos/Desktop/Port%20Automation/HXtos%20CY/HXtosCY%20Portal%20Consulta%20Siscomex%20CE.html -->
-<html lang="pt-br"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Consulta + Captação (Prototype Unificado)</title>
+  <style>
+    :root{
+      --bg:#0e1116; --panel:#121825; --panel2:#0f1522; --stroke:#22304a;
+      --text:#e9eefc; --muted:#9fb0d3; --accent:#6ea8fe; --ok:#41d1a8; --warn:#ffd166; --bad:#ff5c7a;
+      --chip:#1b2740; --input:#0b1020; --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --r:16px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:var(--sans); background:radial-gradient(1200px 800px at 15% -20%, #1a2b5f 0%, transparent 50%),
+                                           radial-gradient(1200px 800px at 115% 0%, #2a1b5f 0%, transparent 45%),
+                                           var(--bg);
+      color:var(--text);
+    }
+    a{color:var(--accent); text-decoration:none}
+    .app{display:grid; grid-template-columns: 310px 1fr; min-height:100vh}
+    .sidebar{
+      padding:18px 14px;
+      border-right:1px solid var(--stroke);
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+    }
+    .brand{
+      display:flex; gap:10px; align-items:center; padding:12px 12px 14px;
+      border:1px solid var(--stroke); border-radius:var(--r); background:rgba(255,255,255,.02);
+      box-shadow: var(--shadow);
+    }
+    .logo{
+      width:34px; height:34px; border-radius:12px;
+      background:linear-gradient(135deg, rgba(110,168,254,.85), rgba(65,209,168,.75));
+      display:grid; place-items:center; font-weight:800; color:#071022;
+    }
+    .brand h1{font-size:14px; margin:0}
+    .brand p{margin:2px 0 0; font-size:12px; color:var(--muted)}
+    .nav{margin-top:14px; display:flex; flex-direction:column; gap:8px}
+    .nav button{
+      appearance:none; border:1px solid var(--stroke); background:rgba(255,255,255,.02);
+      padding:12px 12px; border-radius:14px; color:var(--text); cursor:pointer; text-align:left;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .nav button:hover{border-color:#365a9b}
+    .nav button.active{border-color:rgba(110,168,254,.95); background:rgba(110,168,254,.10)}
+    .pill{
+      font-size:11px; padding:4px 10px; border-radius:999px; background:var(--chip); color:var(--muted); border:1px solid var(--stroke);
+      font-family:var(--mono);
+    }
+    .meta{
+      margin-top:16px; padding:12px; border:1px dashed var(--stroke); border-radius:var(--r); color:var(--muted);
+      font-size:12px; line-height:1.35;
+    }
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HXtos CY • Consulta CE (Siscomex)</title>
-<style>
-  :root{
-    --bg:#f6f9ff; --card:#ffffff; --text:#0f2442; --muted:#6d7e96; --primary:#2f7df6;
-    --primary-100:#ecf3ff; --stroke:#d9e3f7; --table-head:#f0f6ff; --ok:#16a34a; --warn:#f59e0b; --bad:#ef4444;
-  }
-  *{box-sizing:border-box}
-  body{ margin:0; background:var(--bg); color:var(--text); font:14px/1.45 -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,Ubuntu,sans-serif }
-  .app{ max-width:1240px; margin:auto; padding:20px }
-  header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px }
-  h1{ margin:0; font-size:20px }
-  .actions{ display:flex; gap:8px; flex-wrap:wrap }
-  .btn{ background:#fff; color:var(--text); border:1px solid var(--stroke); padding:8px 12px; border-radius:10px; cursor:pointer }
-  .btn.primary{ background:var(--primary); color:#fff; border-color:#0a69e4; font-weight:600 }
-  .btn.ghost{ background:transparent }
-  .card{ background:var(--card); border:1px solid var(--stroke); border-radius:14px; padding:14px; box-shadow:0 6px 16px rgba(5,19,31,.05) }
-  .card h2{ font-size:13px; color:#5e7390; text-transform:uppercase; letter-spacing:.08em; margin:0 0 10px }
-  .grid{ display:grid; gap:12px }
-  .form-grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:10px }
-  label{ display:block; font-size:12px; color:#5f7088; margin:0 0 4px }
-  input, select{ width:100%; background:#fbfdff; color:var(--text); border:1px solid var(--stroke); border-radius:10px; padding:9px 10px; outline:none }
-  .col-2{ grid-column:span 2 } .col-3{ grid-column:span 3 } .col-4{ grid-column:span 4 } .col-5{ grid-column:span 5 } .col-6{ grid-column:span 6 } .col-8{ grid-column:span 8 } .col-12{ grid-column:span 12 }
-  .row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap }
-  .pill{ padding:2px 8px; border-radius:999px; border:1px solid var(--stroke); background:#fff; color:#6d7e96; font-size:12px }
-  .status-ok{ color:#065f46; background:#d1fae5; border-color:#a7f3d0 }
-  .status-warn{ color:#7c2d12; background:#ffedd5; border-color:#fed7aa }
-  .status-bad{ color:#991b1b; background:#fee2e2; border-color:#fecaca }
-  .table-wrap{ overflow:auto; border:1px solid var(--stroke); border-radius:12px; background:#fff }
-  table{ width:100%; border-collapse:collapse; min-width:900px }
-  th, td{ padding:10px 12px; border-bottom:1px solid var(--stroke); text-align:left; white-space:nowrap }
-  th{ font-size:12px; color:#527099; text-transform:uppercase; letter-spacing:.08em; background:var(--table-head); position:sticky; top:0 }
-  .right{text-align:right}
-  .spacer{ height:10px }
-  /* Tabs */
-  .tabs{ display:flex; gap:6px; margin:8px 0 0; flex-wrap:wrap }
-  .tab{ padding:10px 12px; border:1px solid var(--stroke); border-bottom:0; border-radius:10px 10px 0 0; background:#dfeaff; color:#35507a; cursor:pointer; user-select:none }
-  .tab.active{ background:#fff; color:#0f2442; font-weight:600; border-color:var(--stroke) }
-  .tabpanels{ border:1px solid var(--stroke); border-radius:0 12px 12px 12px; background:#fff }
-  .tabpanel{ display:none; padding:14px }
-  .tabpanel.active{ display:block }
-  .helper{ color:#6d7e96; font-size:12px }
-  .kbd{ background:#eef3ff; border:1px solid var(--stroke); border-radius:6px; padding:2px 6px; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px }
-</style>
+    .main{ padding:18px; }
+    .topbar{
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+      padding:14px 16px; border:1px solid var(--stroke); border-radius:var(--r);
+      background:rgba(255,255,255,.02); box-shadow: var(--shadow);
+    }
+    .topbar .title{display:flex; flex-direction:column; gap:2px;}
+    .topbar .title h2{margin:0; font-size:16px}
+    .topbar .title span{font-size:12px; color:var(--muted)}
+    .topbar .actions{display:flex; gap:10px; align-items:center}
+    .btn{
+      border:1px solid var(--stroke); background:rgba(255,255,255,.02); color:var(--text);
+      padding:10px 12px; border-radius:12px; cursor:pointer;
+    }
+    .btn:hover{border-color:#365a9b}
+    .btn.primary{border-color:rgba(110,168,254,.95); background:rgba(110,168,254,.12)}
+    .btn.ghost{background:transparent}
+    .content{ margin-top:14px; display:grid; grid-template-columns: 1fr; gap:14px; }
+
+    .card{
+      border:1px solid var(--stroke); background:rgba(255,255,255,.02);
+      border-radius:var(--r); padding:14px 14px 12px; box-shadow: var(--shadow);
+    }
+    .card h3{margin:0 0 8px; font-size:14px}
+    .card .sub{margin:0 0 12px; color:var(--muted); font-size:12px}
+
+    .tabs{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 12px}
+    .tab{
+      border:1px solid var(--stroke); background:rgba(255,255,255,.02);
+      padding:8px 10px; border-radius:12px; cursor:pointer; color:var(--muted); font-size:12px;
+    }
+    .tab.active{color:var(--text); border-color:rgba(110,168,254,.95); background:rgba(110,168,254,.10)}
+    .grid{ display:grid; grid-template-columns: repeat(12, 1fr); gap:10px; }
+    .field{grid-column: span 4;}
+    .field.span-6{grid-column: span 6;}
+    .field.span-12{grid-column: span 12;}
+    label{display:block; font-size:11px; color:var(--muted); margin:0 0 6px}
+    input, select, textarea{
+      width:100%; padding:10px 10px; border-radius:12px; border:1px solid var(--stroke);
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)), var(--input);
+      color:var(--text); outline:none;
+    }
+    textarea{min-height:98px; resize:vertical}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .hint{font-size:12px; color:var(--muted)}
+    .kbd{font-family:var(--mono); font-size:11px; background:var(--chip); border:1px solid var(--stroke); padding:4px 8px; border-radius:10px}
+    .separator{height:1px; background:var(--stroke); margin:12px 0}
+
+    .dropzone{
+      border:1px dashed #35507a; border-radius:var(--r); padding:16px;
+      background:rgba(110,168,254,.07);
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
+    }
+    .dropzone.dragover{border-color:rgba(65,209,168,.9); background:rgba(65,209,168,.10)}
+    .dz-left{display:flex; flex-direction:column; gap:4px}
+    .dz-left strong{font-size:13px}
+    .dz-left small{color:var(--muted)}
+    .doc-list{margin-top:12px; display:flex; flex-direction:column; gap:10px}
+    .doc{
+      border:1px solid var(--stroke); border-radius:14px; padding:12px; background:rgba(255,255,255,.02);
+      display:grid; grid-template-columns: 1fr 180px 170px; gap:10px; align-items:center;
+    }
+    .doc h4{margin:0; font-size:13px}
+    .doc p{margin:4px 0 0; font-size:12px; color:var(--muted)}
+    .doc .badges{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
+    .badge{
+      font-size:11px; padding:4px 8px; border-radius:999px; border:1px solid var(--stroke);
+      background:var(--chip); color:var(--muted); font-family:var(--mono);
+    }
+    .status{display:flex; align-items:center; gap:8px; justify-content:flex-end; font-size:12px; color:var(--muted);}
+    .dot{width:10px; height:10px; border-radius:99px; background:var(--warn)}
+    .dot.ok{background:var(--ok)}
+    .dot.bad{background:var(--bad)}
+    .doc .actions{display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;}
+    .mini{padding:8px 10px; border-radius:12px; border:1px solid var(--stroke); background:transparent; color:var(--text); cursor:pointer; font-size:12px;}
+    .mini:hover{border-color:#365a9b}
+    .toggle{display:flex; align-items:center; gap:8px; color:var(--muted); font-size:12px;}
+
+    .section{display:none}
+    .section.active{display:block}
+    .two-col{display:grid; grid-template-columns: 1.15fr .85fr; gap:14px}
+    @media (max-width: 1000px){
+      .app{grid-template-columns:1fr}
+      .sidebar{border-right:none; border-bottom:1px solid var(--stroke)}
+      .two-col{grid-template-columns:1fr}
+      .doc{grid-template-columns: 1fr}
+      .status,.doc .actions{justify-content:flex-start}
+    }
+
+    .toast{
+      position:fixed; right:18px; bottom:18px;
+      padding:12px 14px; border-radius:14px; border:1px solid var(--stroke);
+      background:rgba(18,24,37,.92); box-shadow: var(--shadow); color:var(--text);
+      display:none; max-width: 420px;
+    }
+    .toast.show{display:block}
+    .toast small{color:var(--muted); display:block; margin-top:3px}
+  </style>
 </head>
 <body>
 <div class="app">
-  <header>
-    <h1>Consulta CE (Siscomex)</h1>
-    <div class="actions">
-      <button class="btn">Limpar</button>
-      <button class="btn">Exportar</button>
-      <button class="btn primary" id="btnConsultar">Consultar Siscomex</button>
-    </div>
-  </header>
-
-  <!-- Bloco de consulta -->
-  <div class="card">
-    <h2>Parâmetros de Pesquisa</h2>
-    <div class="form-grid">
-      <div class="col-3">
-        <label>Tipo de Chave</label>
-        <select id="tipoChave">
-          <option value="container">Contêiner</option>
-          <option value="bl">B/L (MBL ou HBL)</option>
-          <option value="ce">CE Mercante</option>
-          <option value="ruc">RUC</option>
-        </select>
-      </div>
-      <div class="col-6">
-        <label>Valor</label>
-        <input id="valorChave" placeholder="Ex.: MSKU1234567 ou ZIMABC12345 ou CE2025BR000012345">
-      </div>
-      <div class="col-3">
-        <label>Ambiente</label>
-        <select id="ambiente">
-          <option>Produção</option>
-          <option>Homologação</option>
-        </select>
-      </div>
-
-      <div class="col-3">
-        <label>Filtro (Porto/Recinto)</label>
-        <input id="filtroPorto" placeholder="Ex.: BRSSZ / SGIPA">
-      </div>
-      <div class="col-3">
-        <label>Vigência / Período</label>
-        <input id="periodo" placeholder="Ex.: 01/01/2025 - 31/12/2025">
-      </div>
-      <div class="col-6">
-        <label>Escopo</label>
-        <select id="escopo">
-          <option>Completo (CE + Itens + Contêineres + Eventos)</option>
-          <option>Apenas CE</option>
-          <option>CE + Itens</option>
-          <option>CE + Contêineres</option>
-          <option>CE + Eventos</option>
-        </select>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">CX</div>
+      <div>
+        <h1>Consulta + Captação (Unificado)</h1>
+        <p>Prototype navegável • abas preenchidas • anexo documental</p>
       </div>
     </div>
-    <div class="spacer"></div>
-    <div class="helper">Atalhos: <span class="kbd">Ctrl</span> + <span class="kbd">K</span> para focar o campo valor • Suporta <b>contêiner</b>, <b>B/L</b>, <b>CE</b> e <b>RUC</b>.</div>
-  </div>
 
-  <!-- Resumo -->
-  <div class="card">
-    <h2>Resumo da Consulta</h2>
-    <div class="row" id="resumoChips">
-      <span class="pill">CE: —</span>
-      <span class="pill">Status: —</span>
-      <span class="pill">BL: —</span>
-      <span class="pill">Navio/Viagem: —</span>
-      <span class="pill">Portos: —</span>
-      <span class="pill">Atualizado em: —</span>
+    <nav class="nav">
+      <button data-section="consulta" class="active">Consulta (Siscomex-like) <span class="pill">CTRL+1</span></button>
+      <button data-section="captacao">Captação / Pré-aviso <span class="pill">CTRL+2</span></button>
+      <button data-section="documentos">📂 Upload documental inteligente <span class="pill">CTRL+3</span></button>
+      <button data-section="eventos">Eventos & trilha (RFB/PCS) <span class="pill">CTRL+4</span></button>
+      <button data-section="config">Configurações <span class="pill">CTRL+5</span></button>
+    </nav>
+
+    <div class="meta">
+      <b>Dica:</b> arquivo <i>single-file</i> (bom p/ GitHub/Netlify).<br/>
+      Atalhos <span class="kbd">Ctrl</span>+<span class="kbd">1..5</span>.<br/>
+      Estado em <span class="kbd">localStorage</span>.
     </div>
-  </div>
+  </aside>
 
-  <!-- Abas -->
-  <div class="card">
-    <h2>Detalhes</h2>
-    <div class="tabs" role="tablist">
-      <div class="tab active" data-target="#tab-geral">Geral</div>
-      <div class="tab" data-target="#tab-itens">Itens / NCM</div>
-      <div class="tab" data-target="#tab-cntrs">Contêineres</div>
-      <div class="tab" data-target="#tab-eventos">Eventos</div>
-      <div class="tab" data-target="#tab-docs">Documentos</div>
-      <div class="tab" data-target="#tab-compliance">Compliance</div>
-      <div class="tab" data-target="#tab-raw">Payload (JSON)</div>
-    </div>
-    <div class="tabpanels">
+  <main class="main">
+    <header class="topbar">
+      <div class="title">
+        <h2 id="pageTitle">Consulta (Siscomex-like)</h2>
+        <span id="pageSubtitle">Navegabilidade do app 1 + preenchimentos e UX documental do app 2</span>
+      </div>
+      <div class="actions">
+        <button class="btn ghost" id="btnLoadSample">Carregar dataset exemplo</button>
+        <button class="btn" id="btnExport">Exportar JSON</button>
+        <button class="btn primary" id="btnReset">Reset protótipo</button>
+      </div>
+    </header>
 
-      <!-- Geral -->
-      <section id="tab-geral" class="tabpanel active">
-        <div class="form-grid">
-          <div class="col-3"><label>CE Mercante</label><input id="ceMercante" readonly=""></div>
-          <div class="col-3"><label>RUC</label><input id="ruc" readonly=""></div>
-          <div class="col-3"><label>Grau</label><input id="grau" readonly=""></div>
-          <div class="col-3"><label>Situação</label><input id="situacao" readonly=""></div>
+    <div class="content">
 
-          <div class="col-4"><label>Master BL (MBL)</label><input id="mbl" readonly=""></div>
-          <div class="col-4"><label>House BL (HBL)</label><input id="hbl" readonly=""></div>
-          <div class="col-4"><label>Manifesto</label><input id="manifesto" readonly=""></div>
+      <section class="section active" id="section-consulta">
+        <div class="two-col">
+          <div class="card">
+            <h3>Consulta Operacional</h3>
+            <p class="sub">Selecione um registro e a aplicação propaga os dados pelas abas (CE / BL / CNTR / DUE).</p>
 
-          <div class="col-4"><label>Porto Origem</label><input id="pol" readonly=""></div>
-          <div class="col-4"><label>Porto Destino</label><input id="pod" readonly=""></div>
-          <div class="col-4"><label>Recinto</label><input id="recinto" readonly=""></div>
+            <div class="grid">
+              <div class="field span-6">
+                <label>Entidade principal</label>
+                <select id="entityType">
+                  <option value="CE">Conhecimento (CE)</option>
+                  <option value="BL">Bill of Lading (BL)</option>
+                  <option value="CNTR">Contêiner (CNTR)</option>
+                  <option value="DUE">DUE (Exportação)</option>
+                </select>
+              </div>
+              <div class="field span-6">
+                <label>Pesquisar (ID / Ref / Navio / Cliente)</label>
+                <input id="searchBox" placeholder="Ex.: CE-2025-000184 / MSC / ACME / TCLU1234567" />
+              </div>
+              <div class="field span-12">
+                <div class="row">
+                  <button class="btn primary" id="btnSearch">Buscar</button>
+                  <button class="btn" id="btnClearSearch">Limpar</button>
+                  <span class="hint">Resultado: <span class="kbd" id="resultCount">0</span> registros</span>
+                </div>
+              </div>
+            </div>
 
-          <div class="col-6"><label>Armador</label><input id="armador" readonly=""></div>
-          <div class="col-6"><label>Agente</label><input id="agente" readonly=""></div>
+            <div class="separator"></div>
 
-          <div class="col-6"><label>Consignatário</label><input id="consignatario" readonly=""></div>
-          <div class="col-6"><label>Notificar</label><input id="notify" readonly=""></div>
+            <div class="grid">
+              <div class="field span-12">
+                <label>Resultados</label>
+                <select id="resultList" size="9" style="height:220px; font-family:var(--mono);"></select>
+                <p class="hint" style="margin-top:8px;">Selecionar um item atualiza as abas e o vínculo operacional de documentos.</p>
+              </div>
+            </div>
+          </div>
 
-          <div class="col-3"><label>Navio</label><input id="navio" readonly=""></div>
-          <div class="col-3"><label>Viagem</label><input id="viagem" readonly=""></div>
-          <div class="col-3"><label>ETA</label><input id="eta" readonly=""></div>
-          <div class="col-3"><label>ETD</label><input id="etd" readonly=""></div>
+          <div class="card">
+            <h3>Snapshot do registro selecionado</h3>
+            <p class="sub">Painel rápido para treinamento (sem integrações reais).</p>
+
+            <div class="grid">
+              <div class="field span-6"><label>CE / BL / CNTR / DUE</label><input id="snapRef" readonly /></div>
+              <div class="field span-6"><label>Status operacional</label><input id="snapStatus" readonly /></div>
+              <div class="field span-6"><label>Navio / Viagem</label><input id="snapVessel" readonly /></div>
+              <div class="field span-6"><label>Cliente / Armador</label><input id="snapParty" readonly /></div>
+              <div class="field span-12"><label>Observações</label><textarea id="snapNotes" readonly></textarea></div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <!-- Itens / NCM -->
-      <section id="tab-itens" class="tabpanel">
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>#</th><th>NCM</th><th>Descrição</th><th>Qtd.</th><th>Unid.</th><th class="right">Peso Bruto (kg)</th><th class="right">Volume (m³)</th></tr>
-            </thead>
-            <tbody id="tbodyItens">
-              <tr><td>1</td><td>6201.19.00</td><td>Sobrettudos, capas, etc.</td><td>1.000</td><td>UN</td><td class="right">17073,45</td><td class="right">—</td></tr>
-            </tbody>
-          </table>
+      <section class="section" id="section-captacao">
+        <div class="card">
+          <h3>Captação / Pré-aviso</h3>
+          <p class="sub">Abas com preenchimento guiado + persistência (localStorage).</p>
+
+          <div class="tabs" id="capTabs">
+            <button class="tab active" data-tab="ce">CE</button>
+            <button class="tab" data-tab="bl">BL</button>
+            <button class="tab" data-tab="cntr">CNTR</button>
+            <button class="tab" data-tab="due">DUE</button>
+            <button class="tab" data-tab="partes">Partes & Contatos</button>
+          </div>
+
+          <div id="capTab-ce" class="capTab">
+            <div class="grid">
+              <div class="field"><label>Nº CE</label><input id="ceNumber" placeholder="CE-YYYY-XXXXXX" /></div>
+              <div class="field"><label>Modal</label><select id="ceModal"><option>Marítimo</option><option>Rodoviário</option><option>Ferroviário</option></select></div>
+              <div class="field"><label>Tipo</label><select id="ceType"><option>Importação</option><option>Exportação</option><option>Trânsito</option></select></div>
+              <div class="field span-6"><label>Porto / Recinto</label><input id="ceTerminal" placeholder="Ex.: Itajaí / EADI / CLIA" /></div>
+              <div class="field span-6"><label>ETA / Data prevista</label><input id="ceEta" type="date" /></div>
+              <div class="field span-12"><label>Descrição</label><textarea id="ceDesc"></textarea></div>
+            </div>
+          </div>
+
+          <div id="capTab-bl" class="capTab" style="display:none">
+            <div class="grid">
+              <div class="field"><label>Nº BL</label><input id="blNumber" /></div>
+              <div class="field"><label>Armador</label><input id="blCarrier" /></div>
+              <div class="field"><label>Serviço</label><input id="blService" /></div>
+              <div class="field span-6"><label>POL</label><input id="blPol" /></div>
+              <div class="field span-6"><label>POD</label><input id="blPod" /></div>
+              <div class="field span-12"><label>Notas</label><textarea id="blNotes"></textarea></div>
+            </div>
+          </div>
+
+          <div id="capTab-cntr" class="capTab" style="display:none">
+            <div class="grid">
+              <div class="field"><label>Contêiner</label><input id="cntrId" /></div>
+              <div class="field"><label>ISO / Tamanho</label>
+                <select id="cntrIso">
+                  <option>22G1 (20' Dry)</option><option>42G1 (40' Dry)</option><option>45G1 (40' HC)</option>
+                  <option>22R1 (20' Reefer)</option><option>45R1 (40' Reefer HC)</option>
+                </select>
+              </div>
+              <div class="field"><label>Condição</label><select id="cntrCond"><option>Cheio</option><option>Vazio</option><option>OOG</option></select></div>
+              <div class="field"><label>Peso bruto (kg)</label><input id="cntrWeight" type="number" /></div>
+              <div class="field"><label>IMDG</label><input id="cntrImdg" /></div>
+              <div class="field"><label>Reefer setpoint</label><input id="cntrSetpoint" /></div>
+              <div class="field span-12"><label>Instruções operacionais</label><textarea id="cntrInstr"></textarea></div>
+            </div>
+          </div>
+
+          <div id="capTab-due" class="capTab" style="display:none">
+            <div class="grid">
+              <div class="field"><label>DUE</label><input id="dueId" /></div>
+              <div class="field"><label>Canal</label><select id="dueChannel"><option>Verde</option><option>Amarelo</option><option>Vermelho</option><option>Cinza</option></select></div>
+              <div class="field"><label>Data registro</label><input id="dueDate" type="date" /></div>
+              <div class="field span-6"><label>Exportador</label><input id="dueExporter" /></div>
+              <div class="field span-6"><label>NCM principal</label><input id="dueNcm" /></div>
+              <div class="field span-12"><label>Resumo</label><textarea id="dueSummary"></textarea></div>
+            </div>
+          </div>
+
+          <div id="capTab-partes" class="capTab" style="display:none">
+            <div class="grid">
+              <div class="field span-6"><label>Consignatário</label><input id="partyConsignee" /></div>
+              <div class="field span-6"><label>Notificante</label><input id="partyNotify" /></div>
+              <div class="field span-6"><label>Despachante / Agente</label><input id="partyBroker" /></div>
+              <div class="field span-6"><label>Transportador</label><input id="partyTrucker" /></div>
+              <div class="field span-12"><label>Observações</label><textarea id="partyNotes"></textarea></div>
+            </div>
+          </div>
+
+          <div class="separator"></div>
+          <div class="row">
+            <button class="btn primary" id="btnSaveCap">Salvar abas</button>
+            <button class="btn" id="btnPrefillCap">Pré-preencher (exemplo)</button>
+            <span class="hint">Atalho: <span class="kbd">Ctrl</span>+<span class="kbd">S</span> (nesta seção)</span>
+          </div>
         </div>
       </section>
 
-      <!-- Contêineres -->
-      <section id="tab-cntrs" class="tabpanel">
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>Sigla</th><th>Tamanho</th><th>Tipo</th><th>IMO</th><th>UNDG</th><th class="right">Peso Bruto</th><th>Status</th></tr>
-            </thead>
-            <tbody id="tbodyCntrs">
-              <tr><td>JXLU6150590</td><td>40'</td><td>DRY</td><td></td><td></td><td class="right">17073</td><td>Cheio</td></tr>
-            </tbody>
-          </table>
+      <section class="section" id="section-documentos">
+        <div class="two-col">
+          <div class="card">
+            <h3>📂 Upload documental inteligente</h3>
+            <p class="sub">Drag & drop + classificação sugerida + vínculo (CE/BL/CNTR/DUE).</p>
+
+            <div class="dropzone" id="dropzone">
+              <div class="dz-left">
+                <strong>Arraste e solte arquivos aqui</strong>
+                <small>PDF, PNG, JPG, XML • protótipo (sem backend)</small>
+              </div>
+              <div class="row">
+                <input id="fileInput" type="file" multiple style="display:none" accept=".pdf,.png,.jpg,.jpeg,.xml" />
+                <button class="btn primary" id="btnPickFiles">Selecionar arquivos</button>
+                <button class="btn" id="btnAutoClassify">🧠 Classificar</button>
+              </div>
+            </div>
+
+            <div class="doc-list" id="docList"></div>
+          </div>
+
+          <div class="card">
+            <h3>Vínculo operacional</h3>
+            <p class="sub">Herdado do registro selecionado na <b>Consulta</b>.</p>
+
+            <div class="grid">
+              <div class="field span-6"><label>Referência ativa</label><input id="linkRef" readonly /></div>
+              <div class="field span-6"><label>Tipo</label><input id="linkType" readonly /></div>
+              <div class="field span-12"><label>Checklist sugerido</label><textarea id="linkChecklist" readonly></textarea></div>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="toggle">
+              <input type="checkbox" id="toggleStrict" />
+              <label for="toggleStrict" style="margin:0">Exigir checklist completo (modo treinamento)</label>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="row">
+              <button class="btn primary" id="btnBindAll">Vincular docs ao registro ativo</button>
+              <button class="btn" id="btnClearDocs">Limpar documentos</button>
+            </div>
+          </div>
         </div>
       </section>
 
-      <!-- Eventos -->
-      <section id="tab-eventos" class="tabpanel">
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Data/Hora</th><th>Evento</th><th>Origem</th><th>Detalhe</th></tr></thead>
-            <tbody id="tbodyEventos">
-              <tr><td>2025-10-01 12:05</td><td>CE Registrada</td><td>Siscomex</td><td>CE criada pelo agente</td></tr>
-              <tr><td>2025-10-05 09:20</td><td>Manifesto Entregue</td><td>Transportador</td><td>Conhecimento manifestado</td></tr>
-            </tbody>
-          </table>
+      <section class="section" id="section-eventos">
+        <div class="card">
+          <h3>Eventos & Trilha</h3>
+          <p class="sub">Log para simular PCS / RFB / TOS.</p>
+
+          <div class="grid">
+            <div class="field span-6">
+              <label>Gerar evento</label>
+              <select id="evtType">
+                <option value="CE_RECEBIDO">CE_RECEBIDO</option>
+                <option value="BL_VINCULADO">BL_VINCULADO</option>
+                <option value="CNTR_GATE_IN">CNTR_GATE_IN</option>
+                <option value="CNTR_INSPECIONADO">CNTR_INSPECIONADO</option>
+                <option value="DOC_ANEXADO">DOC_ANEXADO</option>
+                <option value="LIBERACAO_ADUANA">LIBERACAO_ADUANA</option>
+                <option value="CNTR_GATE_OUT">CNTR_GATE_OUT</option>
+              </select>
+            </div>
+            <div class="field span-6"><label>Mensagem</label><input id="evtMsg" placeholder="Ex.: Documento fiscal validado..." /></div>
+            <div class="field span-12">
+              <button class="btn primary" id="btnAddEvent">Adicionar evento</button>
+              <button class="btn" id="btnClearEvents">Limpar eventos</button>
+            </div>
+            <div class="field span-12"><label>Log</label><textarea id="evtLog" style="min-height:260px; font-family:var(--mono)" readonly></textarea></div>
+          </div>
         </div>
       </section>
 
-      <!-- Documentos -->
-      <section id="tab-docs" class="tabpanel">
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Documento</th><th>Número</th><th>Emissor</th><th>Data</th><th>Vínculo</th></tr></thead>
-          <tbody id="tbodyDocs">
-            <tr><td>DI</td><td>20/1234567-8</td><td>RFB</td><td>2025-10-12</td><td>CE</td></tr>
-            <tr><td>DU-E</td><td>23BR000123456</td><td>RFB</td><td>2025-10-15</td><td>BL</td></tr>
-          </tbody>
-          </table>
-        </div>
-      </section>
+      <section class="section" id="section-config">
+        <div class="card">
+          <h3>Configurações do protótipo</h3>
+          <p class="sub">Ajustes para treinamento e demonstração.</p>
 
-      <!-- Compliance -->
-      <section id="tab-compliance" class="tabpanel">
-        <div class="row">
-          <span class="pill status-ok">Sem bloqueios</span>
-          <span class="pill status-warn">ANVISA: inspeção documental</span>
-          <span class="pill status-bad">IMDG: pendente declaração</span>
+          <div class="grid">
+            <div class="field span-6">
+              <label>Modo</label>
+              <select id="cfgMode">
+                <option value="treinamento">Treinamento (mais mensagens)</option>
+                <option value="demo">Demo (limpo)</option>
+              </select>
+            </div>
+            <div class="field span-6">
+              <label>Auto-salvar</label>
+              <select id="cfgAutosave">
+                <option value="on">Ligado</option>
+                <option value="off">Desligado</option>
+              </select>
+            </div>
+            <div class="field span-12"><label>Notas do instrutor</label><textarea id="cfgNotes"></textarea></div>
+            <div class="field span-12"><button class="btn primary" id="btnSaveCfg">Salvar configurações</button></div>
+          </div>
         </div>
-      </section>
-
-      <!-- Payload -->
-      <section id="tab-raw" class="tabpanel">
-        <pre id="payload" style="white-space:pre-wrap; background:#fbfdff; border:1px solid var(--stroke); border-radius:10px; padding:12px; font-family:ui-monospace,Consolas,Menlo,monospace; font-size:12px;">{/* O JSON bruto da API Siscomex aparecerá aqui após a consulta. */}
-        </pre>
       </section>
 
     </div>
-  </div>
-
-  <!-- Auditoria / Integração -->
-  <div class="card">
-    <h2>Integração</h2>
-    <div class="row">
-      <span class="pill">Última consulta: —</span>
-      <span class="pill">Tempo de resposta: —</span>
-      <span class="pill">Status API: —</span>
-      <span class="pill">Chave de API: ****…</span>
-    </div>
-    <div class="spacer"></div>
-    <div class="helper">Conecte o endpoint de integração do Siscomex no botão <b>Consultar Siscomex</b>. Simulamos dados estáticos até a conexão real.</div>
-  </div>
+  </main>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-// Navegação de abas
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active'));
-    tab.classList.add('active');
-    const tgt = document.querySelector(tab.dataset.target);
-    if(tgt) tgt.classList.add('active');
-  });
-});
+const LS={dataset:"cx.dataset.v1",selected:"cx.selected.v1",captacao:"cx.captacao.v1",documentos:"cx.documentos.v1",eventos:"cx.eventos.v1",config:"cx.config.v1"};
+const el=(id)=>document.getElementById(id);
+const escapeHtml=(s)=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const toast=(title,msg="")=>{const t=el("toast");t.innerHTML=`<b>${escapeHtml(title)}</b>${msg?`<small>${escapeHtml(msg)}</small>`:""}`;t.classList.add("show");clearTimeout(window.__t);window.__t=setTimeout(()=>t.classList.remove("show"),2400);};
+const nowIso=()=>new Date().toISOString();
+const shortTs=()=>new Date().toISOString().replace("T"," ").slice(0,19);
+const defaultConfig={mode:"treinamento",autosave:"on",notes:""};
 
-// UX: Ctrl+K foca no campo
-document.addEventListener('keydown', (e)=>{
-  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='k'){
-    e.preventDefault();
-    document.getElementById('valorChave').focus();
-  }
-});
+function loadConfig(){const cfg=JSON.parse(localStorage.getItem(LS.config)||"null")||defaultConfig;el("cfgMode").value=cfg.mode||"treinamento";el("cfgAutosave").value=cfg.autosave||"on";el("cfgNotes").value=cfg.notes||"";return cfg;}
+function saveConfig(){const cfg={mode:el("cfgMode").value,autosave:el("cfgAutosave").value,notes:el("cfgNotes").value};localStorage.setItem(LS.config,JSON.stringify(cfg));toast("Configurações salvas");return cfg;}
 
-// Mock de consulta
-document.getElementById('btnConsultar').addEventListener('click', ()=>{
-  const tipo = document.getElementById('tipoChave').value;
-  const valor = document.getElementById('valorChave').value.trim();
-  const now = new Date().toISOString().replace('T',' ').slice(0,16);
-  // Atualiza chips resumo
-  const chips = document.getElementById('resumoChips').children;
-  chips[0].textContent = 'CE: CE2025BR000012345';
-  chips[1].textContent = 'Status: Em Trânsito';
-  chips[2].textContent = 'BL: ZIMXLIAS0510422';
-  chips[3].textContent = 'Navio/Viagem: ZIM SANTOS / 012E';
-  chips[4].textContent = 'Portos: XIAMEN → SANTOS';
-  chips[5].textContent = 'Atualizado em: ' + now;
+function sampleDataset(){return[
+  {id:"CE-2025-000184",type:"CE",status:"EM_ANALISE",vessel:"MSC FORTALEZA / 021W",party:"ACME Importadora",notes:"Pendente: nota fiscal e packing list. Possível inspeção no Gate.",links:{BL:"MSCU1234567890",CNTR:"TCLU1234567",DUE:""},checklist:["Invoice","Packing List","CE (PDF)","Comprovante de Pagamento"]},
+  {id:"BL-MAEU9988776655",type:"BL",status:"LIBERADO",vessel:"MAERSK NAPOLI / 114S",party:"Beta Química S/A",notes:"Hold removido; pronto para gate-out após agendamento.",links:{CE:"CE-2025-000251",CNTR:"MSCU7654321",DUE:""},checklist:["BL (PDF)","Comprovante de Frete","Manifesto","Invoice"]},
+  {id:"TCLU1234567",type:"CNTR",status:"NO_PATIO",vessel:"MSC FORTALEZA / 021W",party:"ACME Importadora",notes:"Reefer? Não. IMDG: 3. Priorizar para inspeção e liberação.",links:{CE:"CE-2025-000184",BL:"MSCU1234567890",DUE:""},checklist:["Gate In (EIR)","VGM","Foto Lacres","Invoice","Packing List"]},
+  {id:"DUE-2025-001033",type:"DUE",status:"CANAL_AMARELO",vessel:"CMA CGM TIBETE / 301E",party:"Exportadora Delta",notes:"Canal amarelo: aguardar parametrização.",links:{CNTR:"CMAU9988776",CE:"",BL:"",DUE:"DUE-2025-001033"},checklist:["DUE","NF-e","DU-E anexos","Packing List","Booking"]}
+];}
+function loadDataset(){return JSON.parse(localStorage.getItem(LS.dataset)||"null")||[];}
+function saveDataset(arr){localStorage.setItem(LS.dataset,JSON.stringify(arr||[]));}
+function setSelected(obj){localStorage.setItem(LS.selected,JSON.stringify(obj||null));renderSnapshot(obj);renderLinkage(obj);}
+function getSelected(){return JSON.parse(localStorage.getItem(LS.selected)||"null");}
 
-  // Preenche "Geral"
-  document.getElementById('ceMercante').value = 'CE2025BR000012345';
-  document.getElementById('ruc').value = 'BR2025ABC12345';
-  document.getElementById('grau').value = 'Master';
-  document.getElementById('situacao').value = 'Em Trânsito';
+function renderSnapshot(obj){
+  el("snapRef").value=obj?.id||""; el("snapStatus").value=obj?.status||""; el("snapVessel").value=obj?.vessel||"";
+  el("snapParty").value=obj?.party||""; el("snapNotes").value=obj?.notes||"";
+}
+function renderLinkage(obj){
+  el("linkRef").value=obj?.id||""; el("linkType").value=obj?.type||"";
+  el("linkChecklist").value=(obj?.checklist||[]).map(x=>`- ${x}`).join("\n")||"- (sem checklist)";
+  if(obj) propagateToCaptacao(obj);
+}
+function populateResults(list){
+  const box=el("resultList"); box.innerHTML="";
+  list.forEach(item=>{const opt=document.createElement("option");opt.value=item.id;opt.textContent=`[${item.type}] ${item.id} • ${item.status} • ${item.party}`;box.appendChild(opt);});
+  el("resultCount").textContent=String(list.length);
+}
+function search(){
+  const ds=loadDataset(); const q=el("searchBox").value.trim().toLowerCase(); const type=el("entityType").value;
+  const filtered=ds.filter(x=>x.type===type && (!q || (`${x.id} ${x.status} ${x.vessel} ${x.party} ${x.notes} ${JSON.stringify(x.links||{})}`.toLowerCase().includes(q))));
+  populateResults(filtered); if(filtered[0]) setSelected(filtered[0]); toast("Busca concluída", `${filtered.length} registro(s)`);
+}
+function loadSample(){const ds=sampleDataset();saveDataset(ds);populateResults(ds.filter(x=>x.type===el("entityType").value));setSelected(ds[0]);toast("Dataset carregado");}
+function resetAll(){Object.values(LS).forEach(k=>localStorage.removeItem(k));location.hash="";location.reload();}
 
-  document.getElementById('mbl').value = 'ZIMXLIAS0510422';
-  document.getElementById('hbl').value = (tipo==='bl' ? valor : '—');
-  document.getElementById('manifesto').value = '2025BRMAN0000123';
-
-  document.getElementById('pol').value = 'XIAMEN';
-  document.getElementById('pod').value = 'SANTOS';
-  document.getElementById('recinto').value = 'SGIPA';
-
-  document.getElementById('armador').value = 'ZIM INTEGRATED SHIPPING';
-  document.getElementById('agente').value = 'AGL AGENCIAMENTOS LTDA';
-
-  document.getElementById('consignatario').value = 'ABN COMERCIAL IMPORTADORA E EXP.';
-  document.getElementById('notify').value = 'PGL BRASIL LTDA';
-
-  document.getElementById('navio').value = 'ZIM SANTOS';
-  document.getElementById('viagem').value = '012E';
-  document.getElementById('eta').value = '2025-10-28';
-  document.getElementById('etd').value = '2025-10-15';
-
-  // Payload simulado
-  const payload = {
-    ce: 'CE2025BR000012345',
-    status: 'EM_TRANSITO',
-    bl: { mbl: 'ZIMXLIAS0510422', hbl: (tipo==='bl'?valor:null) },
-    ruc: 'BR2025ABC12345',
-    manifesto: '2025BRMAN0000123',
-    ports: { pol:'XIAMEN', pod:'SANTOS' },
-    recinto: 'SGIPA',
-    vessel: { name:'ZIM SANTOS', voyage:'012E', eta:'2025-10-28', etd:'2025-10-15' }
+/* Captação */
+function getCaptacao(){return JSON.parse(localStorage.getItem(LS.captacao)||"null")||{};}
+function saveCaptacao(){
+  const data={
+    ceNumber:el("ceNumber").value,ceModal:el("ceModal").value,ceType:el("ceType").value,ceTerminal:el("ceTerminal").value,ceEta:el("ceEta").value,ceDesc:el("ceDesc").value,
+    blNumber:el("blNumber").value,blCarrier:el("blCarrier").value,blService:el("blService").value,blPol:el("blPol").value,blPod:el("blPod").value,blNotes:el("blNotes").value,
+    cntrId:el("cntrId").value,cntrIso:el("cntrIso").value,cntrCond:el("cntrCond").value,cntrWeight:el("cntrWeight").value,cntrImdg:el("cntrImdg").value,cntrSetpoint:el("cntrSetpoint").value,cntrInstr:el("cntrInstr").value,
+    dueId:el("dueId").value,dueChannel:el("dueChannel").value,dueDate:el("dueDate").value,dueExporter:el("dueExporter").value,dueNcm:el("dueNcm").value,dueSummary:el("dueSummary").value,
+    partyConsignee:el("partyConsignee").value,partyNotify:el("partyNotify").value,partyBroker:el("partyBroker").value,partyTrucker:el("partyTrucker").value,partyNotes:el("partyNotes").value,
+    updatedAt:nowIso()
   };
-  document.getElementById('payload').textContent = JSON.stringify(payload, null, 2);
+  localStorage.setItem(LS.captacao,JSON.stringify(data));
+  toast("Captação salva");
+}
+function loadCaptacaoIntoForm(){
+  const d=getCaptacao(); const set=(k,v)=>{if(el(k)) el(k).value=v??"";};
+  ["ceNumber","ceTerminal","ceEta","ceDesc","blNumber","blCarrier","blService","blPol","blPod","blNotes","cntrId","cntrWeight","cntrImdg","cntrSetpoint","cntrInstr","dueId","dueDate","dueExporter","dueNcm","dueSummary","partyConsignee","partyNotify","partyBroker","partyTrucker","partyNotes"].forEach(k=>set(k,d[k]));
+  if(d.ceModal) el("ceModal").value=d.ceModal;
+  if(d.ceType) el("ceType").value=d.ceType;
+  if(d.cntrIso) el("cntrIso").value=d.cntrIso;
+  if(d.cntrCond) el("cntrCond").value=d.cntrCond;
+  if(d.dueChannel) el("dueChannel").value=d.dueChannel;
+}
+function propagateToCaptacao(sel,force=false){
+  const safe=(id,val)=>{const n=el(id); if(!n) return; if(force || !n.value) n.value=val??"";};
+  if(sel.type==="CE"){safe("ceNumber",sel.id);safe("ceDesc",sel.notes);safe("blNumber",sel.links?.BL||"");safe("cntrId",sel.links?.CNTR||"");safe("partyConsignee",sel.party);}
+  if(sel.type==="BL"){safe("blNumber",sel.id.replace(/^BL-/,""));safe("ceNumber",sel.links?.CE||"");safe("cntrId",sel.links?.CNTR||"");safe("partyConsignee",sel.party);safe("blNotes",sel.notes);}
+  if(sel.type==="CNTR"){safe("cntrId",sel.id);safe("ceNumber",sel.links?.CE||"");safe("blNumber",sel.links?.BL||"");safe("cntrInstr",sel.notes);safe("partyConsignee",sel.party);}
+  if(sel.type==="DUE"){safe("dueId",sel.id);safe("dueSummary",sel.notes);safe("cntrId",sel.links?.CNTR||"");safe("partyConsignee",sel.party);}
+  if(loadConfig().autosave==="on") saveCaptacao();
+}
 
-  // Integração chips
-  const integ = document.querySelectorAll('.card .row .pill');
-  integ[0].textContent = 'Última consulta: ' + now;
-  integ[1].textContent = 'Tempo de resposta: 520 ms';
-  integ[2].textContent = 'Status API: 200 OK';
-});
+/* Docs */
+function getDocs(){return JSON.parse(localStorage.getItem(LS.documentos)||"null")||[];}
+function saveDocs(d){localStorage.setItem(LS.documentos,JSON.stringify(d||[]));}
+function humanSize(b){if(b<1024) return b+" B"; const kb=b/1024; if(kb<1024) return kb.toFixed(1)+" KB"; return (kb/1024).toFixed(2)+" MB";}
+function guessClass(name){const n=name.toLowerCase(); if(n.includes("invoice")||n.includes("fatura")||n.includes("nf")||n.endsWith(".xml")) return "FISCAL"; if(n.includes("packing")) return "PACKING_LIST"; if(n.includes("bl")) return "BL"; if(n.includes("ce")) return "CE"; if(n.includes("due")) return "DUE"; if(n.includes("eir")||n.includes("gate")) return "EIR"; if(n.includes("foto")||n.includes("image")||n.endsWith(".jpg")||n.endsWith(".png")||n.endsWith(".jpeg")) return "IMAGEM"; return "OUTROS";}
+function docStatus(doc){const strict=el("toggleStrict").checked; const hasLink=!!doc.linkRef; const hasClass=!!doc.classification; if(!hasLink||!hasClass) return {level:"warn",label:"Pendente vínculo/classificação"}; if(strict) return {level:"ok",label:"Válido (modo estrito)"}; return {level:"ok",label:"Válido"};}
+function renderDocs(){
+  const docs=getDocs(); const list=el("docList"); list.innerHTML="";
+  if(!docs.length){list.innerHTML=`<div class="hint">Nenhum documento anexado ainda.</div>`; return;}
+  docs.slice().reverse().forEach(doc=>{
+    const s=docStatus(doc); const dotClass=s.level==="ok"?"ok":(s.level==="bad"?"bad":"");
+    const row=document.createElement("div"); row.className="doc";
+    row.innerHTML=`
+      <div>
+        <h4>${escapeHtml(doc.name)}</h4>
+        <p>${escapeHtml(doc.mime)} • ${escapeHtml(humanSize(doc.size))} • ${escapeHtml(new Date(doc.addedAt).toLocaleString())}</p>
+        <div class="badges">
+          <span class="badge">class=${escapeHtml(doc.classification||"—")}</span>
+          <span class="badge">vinc=${escapeHtml(doc.linkRef||"—")}</span>
+          <span class="badge">tipo=${escapeHtml(doc.linkType||"—")}</span>
+        </div>
+      </div>
+      <div class="status"><span class="dot ${dotClass}"></span><span>${escapeHtml(s.label)}</span></div>
+      <div class="actions">
+        <button class="mini" data-act="bind" data-id="${escapeHtml(doc.id)}">Vincular</button>
+        <button class="mini" data-act="classify" data-id="${escapeHtml(doc.id)}">Classificar</button>
+        <button class="mini" data-act="remove" data-id="${escapeHtml(doc.id)}">Remover</button>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+function addFiles(fileList){
+  const docs=getDocs(); const sel=getSelected();
+  Array.from(fileList).forEach(f=>docs.push({id:crypto.randomUUID(),name:f.name,size:f.size,mime:f.type||"application/octet-stream",classification:"",linkRef:sel?.id||"",linkType:sel?.type||"",addedAt:Date.now()}));
+  saveDocs(docs); renderDocs(); toast("Arquivos adicionados", `${fileList.length} arquivo(s)`);
+}
+function bindDoc(id){
+  const docs=getDocs(); const sel=getSelected(); const d=docs.find(x=>x.id===id);
+  if(!d){toast("Documento não encontrado");return;}
+  if(!sel){toast("Nenhum registro ativo","Selecione um item em Consulta.");return;}
+  d.linkRef=sel.id; d.linkType=sel.type; saveDocs(docs); renderDocs(); toast("Vinculado", `${d.name} → ${sel.id}`);
+}
+function classifyDoc(id){
+  const docs=getDocs(); const d=docs.find(x=>x.id===id);
+  if(!d){toast("Documento não encontrado");return;}
+  d.classification=guessClass(d.name); saveDocs(docs); renderDocs(); toast("Classificação sugerida", `${d.name}: ${d.classification}`);
+}
+function removeDoc(id){saveDocs(getDocs().filter(x=>x.id!==id)); renderDocs(); toast("Documento removido");}
+function bindAllDocs(){
+  const docs=getDocs(); const sel=getSelected();
+  if(!sel){toast("Nenhum registro ativo","Selecione um item em Consulta.");return;}
+  docs.forEach(d=>{d.linkRef=sel.id; d.linkType=sel.type;});
+  saveDocs(docs); renderDocs(); toast("Docs vinculados", `Todos → ${sel.id}`);
+}
+function autoClassifyAll(){const docs=getDocs(); docs.forEach(d=>{if(!d.classification) d.classification=guessClass(d.name);}); saveDocs(docs); renderDocs(); toast("Classificação aplicada");}
 
+/* Eventos */
+function getEvents(){return JSON.parse(localStorage.getItem(LS.eventos)||"null")||[];}
+function saveEvents(e){localStorage.setItem(LS.eventos,JSON.stringify(e||[]));}
+function renderEvents(){const ev=getEvents(); el("evtLog").value=ev.map(x=>`${x.ts}  |  ${x.type.padEnd(18)} |  ref=${x.ref||"-"}  |  ${x.msg||""}`).join("\n");}
+function addEvent(){
+  const sel=getSelected(); const ev={ts:shortTs(),type:el("evtType").value,ref:sel?.id||"",msg:el("evtMsg").value.trim()};
+  const arr=getEvents(); arr.push(ev); saveEvents(arr); renderEvents(); el("evtMsg").value=""; toast("Evento registrado", ev.type+(ev.ref?` • ${ev.ref}`:""));
+}
+
+const titles={
+  consulta:["Consulta (Siscomex-like)","Navegabilidade do app 1 + preenchimentos e UX documental do app 2"],
+  captacao:["Captação / Pré-aviso","Abas com preenchimento, salvas em localStorage"],
+  documentos:["📂 Upload documental inteligente","Drag & drop, classificação sugerida e vínculo operacional"],
+  eventos:["Eventos & trilha","Log para simular PCS/RFB/TOS"],
+  config:["Configurações","Ajustes para treinamento e demo"]
+};
+function activateSection(key){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  el(`section-${key}`).classList.add("active");
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active", b.dataset.section===key));
+  el("pageTitle").textContent=titles[key]?.[0]||"Tela";
+  el("pageSubtitle").textContent=titles[key]?.[1]||"";
+  location.hash=key;
+}
+function activateCapTab(tab){
+  document.querySelectorAll("#capTabs .tab").forEach(t=>t.classList.toggle("active", t.dataset.tab===tab));
+  document.querySelectorAll(".capTab").forEach(div=>div.style.display="none");
+  const target=el(`capTab-${tab}`); if(target) target.style.display="block";
+}
+function exportJson(){
+  const payload={exportedAt:nowIso(),dataset:loadDataset(),selected:getSelected(),captacao:getCaptacao(),documentos:getDocs(),eventos:getEvents(),config:JSON.parse(localStorage.getItem(LS.config)||"null")||defaultConfig};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`consulta_captacao_export_${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a); a.click(); a.remove(); toast("Exportado","JSON baixado.");
+}
+function wire(){
+  document.querySelectorAll(".nav button").forEach(btn=>btn.addEventListener("click",()=>activateSection(btn.dataset.section)));
+  const hash=(location.hash||"").replace("#",""); if(hash && titles[hash]) activateSection(hash);
+
+  window.addEventListener("keydown",(e)=>{
+    if(e.ctrlKey && !e.shiftKey && !e.altKey){
+      if(e.key>="1" && e.key<="5"){e.preventDefault(); const map={"1":"consulta","2":"captacao","3":"documentos","4":"eventos","5":"config"}; activateSection(map[e.key]);}
+      if(e.key.toLowerCase()==="s"){const cur=(location.hash||"#consulta").replace("#",""); if(cur==="captacao"){e.preventDefault(); saveCaptacao();}}
+    }
+  });
+
+  el("entityType").addEventListener("change",()=>populateResults(loadDataset().filter(x=>x.type===el("entityType").value)));
+  el("btnSearch").addEventListener("click",search);
+  el("btnClearSearch").addEventListener("click",()=>{el("searchBox").value=""; search();});
+  el("resultList").addEventListener("change",()=>{const ds=loadDataset(); const id=el("resultList").value; const obj=ds.find(x=>x.id===id); if(obj) setSelected(obj);});
+
+  document.querySelectorAll("#capTabs .tab").forEach(t=>t.addEventListener("click",()=>activateCapTab(t.dataset.tab)));
+  el("btnSaveCap").addEventListener("click",saveCaptacao);
+  el("btnPrefillCap").addEventListener("click",()=>propagateToCaptacao(getSelected(),true));
+  document.querySelectorAll("#section-captacao input, #section-captacao select, #section-captacao textarea").forEach(n=>n.addEventListener("input",()=>{if(loadConfig().autosave==="on") saveCaptacao();}));
+
+  el("btnPickFiles").addEventListener("click",()=>el("fileInput").click());
+  el("fileInput").addEventListener("change",(e)=>{if(e.target.files?.length) addFiles(e.target.files); e.target.value="";});
+  const dz=el("dropzone");
+  ["dragenter","dragover"].forEach(evt=>dz.addEventListener(evt,(e)=>{e.preventDefault(); e.stopPropagation(); dz.classList.add("dragover");}));
+  ["dragleave","drop"].forEach(evt=>dz.addEventListener(evt,(e)=>{e.preventDefault(); e.stopPropagation(); dz.classList.remove("dragover");}));
+  dz.addEventListener("drop",(e)=>{const files=e.dataTransfer?.files; if(files?.length) addFiles(files);});
+
+  el("btnAutoClassify").addEventListener("click",autoClassifyAll);
+  el("btnBindAll").addEventListener("click",bindAllDocs);
+  el("btnClearDocs").addEventListener("click",()=>{localStorage.removeItem(LS.documentos); renderDocs(); toast("Documentos limpos");});
+  el("docList").addEventListener("click",(e)=>{const b=e.target.closest("button"); if(!b) return; const act=b.dataset.act; const id=b.dataset.id; if(act==="bind") bindDoc(id); if(act==="classify") classifyDoc(id); if(act==="remove") removeDoc(id);});
+
+  el("btnAddEvent").addEventListener("click",addEvent);
+  el("btnClearEvents").addEventListener("click",()=>{localStorage.removeItem(LS.eventos); renderEvents(); toast("Eventos limpos");});
+
+  el("btnSaveCfg").addEventListener("click",saveConfig);
+  el("btnLoadSample").addEventListener("click",loadSample);
+  el("btnExport").addEventListener("click",exportJson);
+  el("btnReset").addEventListener("click",resetAll);
+}
+
+function init(){
+  loadConfig(); loadCaptacaoIntoForm();
+  const ds=loadDataset();
+  if(!ds.length){populateResults([]); renderSnapshot(null); renderLinkage(null);}
+  else {populateResults(ds.filter(x=>x.type===el("entityType").value)); setSelected(getSelected()||ds[0]);}
+  renderDocs(); renderEvents(); wire(); renderLinkage(getSelected());
+  if(!loadDataset().length) toast("Protótipo pronto","Clique em “Carregar dataset exemplo”.");
+}
+init();
 </script>
-
-
-</body></html>
+</body>
+</html>
