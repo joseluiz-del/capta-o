@@ -1,999 +1,218 @@
-<!doctype html>
-<html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Consulta + Captação (Mobile-Ready)</title>
-  <style>
-    :root{
-      --bg:#0e1116; --panel:#121825; --panel2:#0f1522; --stroke:#22304a;
-      --text:#e9eefc; --muted:#9fb0d3; --accent:#6ea8fe; --ok:#41d1a8; --warn:#ffd166; --bad:#ff5c7a;
-      --chip:#1b2740; --input:#0b1020; --shadow: 0 18px 60px rgba(0,0,0,.45);
-      --r:16px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; font-family:var(--sans);
-      background:radial-gradient(1200px 800px at 15% -20%, #1a2b5f 0%, transparent 50%),
-                radial-gradient(1200px 800px at 115% 0%, #2a1b5f 0%, transparent 45%),
-                var(--bg);
-      color:var(--text);
-    }
-    a{color:var(--accent); text-decoration:none}
-    .app{display:grid; grid-template-columns: 310px 1fr; min-height:100vh}
-    .sidebar{
-      padding:18px 14px;
-      border-right:1px solid var(--stroke);
-      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
-    }
-    .brand{
-      display:flex; gap:10px; align-items:center; padding:12px 12px 14px;
-      border:1px solid var(--stroke); border-radius:var(--r); background:rgba(255,255,255,.02);
-      box-shadow: var(--shadow);
-    }
-    .logo{
-      width:34px; height:34px; border-radius:12px;
-      background:linear-gradient(135deg, rgba(110,168,254,.85), rgba(65,209,168,.75));
-      display:grid; place-items:center; font-weight:800; color:#071022;
-    }
-    .brand h1{font-size:14px; margin:0}
-    .brand p{margin:2px 0 0; font-size:12px; color:var(--muted)}
-    .nav{margin-top:14px; display:flex; flex-direction:column; gap:8px}
-    .nav button{
-      appearance:none; border:1px solid var(--stroke); background:rgba(255,255,255,.02);
-      padding:12px 12px; border-radius:14px; color:var(--text); cursor:pointer; text-align:left;
-      display:flex; justify-content:space-between; align-items:center;
-    }
-    .nav button:hover{border-color:#365a9b}
-    .nav button.active{border-color:rgba(110,168,254,.95); background:rgba(110,168,254,.10)}
-    .pill{
-      font-size:11px; padding:4px 10px; border-radius:999px; background:var(--chip); color:var(--muted); border:1px solid var(--stroke);
-      font-family:var(--mono);
-    }
-    .meta{
-      margin-top:16px; padding:12px; border:1px dashed var(--stroke); border-radius:var(--r); color:var(--muted);
-      font-size:12px; line-height:1.35;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HXtos CY • Consulta CE (Siscomex)</title>
 
-    .main{ padding:18px; }
-    .topbar{
-      display:flex; gap:12px; align-items:center; justify-content:space-between;
-      padding:14px 16px; border:1px solid var(--stroke); border-radius:var(--r);
-      background:rgba(255,255,255,.02); box-shadow: var(--shadow);
-    }
-    .topbar .title{display:flex; flex-direction:column; gap:2px;}
-    .topbar .title h2{margin:0; font-size:16px}
-    .topbar .title span{font-size:12px; color:var(--muted)}
-    .topbar .actions{display:flex; gap:10px; align-items:center}
-    .btn{
-      border:1px solid var(--stroke); background:rgba(255,255,255,.02); color:var(--text);
-      padding:10px 12px; border-radius:12px; cursor:pointer;
-      min-height:44px;
-    }
-    .btn:hover{border-color:#365a9b}
-    .btn.primary{border-color:rgba(110,168,254,.95); background:rgba(110,168,254,.12)}
-    .btn.ghost{background:transparent}
-    .content{ margin-top:14px; display:grid; grid-template-columns: 1fr; gap:14px; }
+<style>
+:root{
+  --bg:#f6f9ff; --card:#ffffff; --text:#0f2442; --muted:#6d7e96;
+  --primary:#2f7df6; --stroke:#d9e3f7; --table-head:#f0f6ff;
+  --ok:#16a34a; --warn:#f59e0b; --bad:#ef4444;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font:14px/1.45 system-ui;color:var(--text)}
+.app{max-width:1240px;margin:auto;padding:20px}
 
-    .card{
-      border:1px solid var(--stroke); background:rgba(255,255,255,.02);
-      border-radius:var(--r); padding:14px 14px 12px; box-shadow: var(--shadow);
-    }
-    .card h3{margin:0 0 8px; font-size:14px}
-    .card .sub{margin:0 0 12px; color:var(--muted); font-size:12px}
+h1{margin:0;font-size:20px}
+h2{font-size:13px;text-transform:uppercase;color:#5e7390;letter-spacing:.08em;margin:0 0 10px}
 
-    .tabs{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 12px}
-    .tab{
-      border:1px solid var(--stroke); background:rgba(255,255,255,.02);
-      padding:8px 10px; border-radius:12px; cursor:pointer; color:var(--muted); font-size:12px;
-      min-height:40px;
-    }
-    .tab.active{color:var(--text); border-color:rgba(110,168,254,.95); background:rgba(110,168,254,.10)}
-    .grid{ display:grid; grid-template-columns: repeat(12, 1fr); gap:10px; }
-    .field{grid-column: span 4;}
-    .field.span-6{grid-column: span 6;}
-    .field.span-12{grid-column: span 12;}
-    label{display:block; font-size:11px; color:var(--muted); margin:0 0 6px}
-    input, select, textarea{
-      width:100%; padding:10px 10px; border-radius:12px; border:1px solid var(--stroke);
-      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)), var(--input);
-      color:var(--text); outline:none;
-      font-size:16px;
-      min-height:44px;
-    }
-    textarea{min-height:98px; resize:vertical}
-    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-    .hint{font-size:12px; color:var(--muted)}
-    .kbd{font-family:var(--mono); font-size:11px; background:var(--chip); border:1px solid var(--stroke); padding:4px 8px; border-radius:10px}
-    .separator{height:1px; background:var(--stroke); margin:12px 0}
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:14px;
+}
 
-    .dropzone{
-      border:1px dashed #35507a; border-radius:var(--r); padding:16px;
-      background:rgba(110,168,254,.07);
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
-    }
-    .dropzone.dragover{border-color:rgba(65,209,168,.9); background:rgba(65,209,168,.10)}
-    .dz-left{display:flex; flex-direction:column; gap:4px}
-    .dz-left strong{font-size:13px}
-    .dz-left small{color:var(--muted)}
-    .doc-list{margin-top:12px; display:flex; flex-direction:column; gap:10px}
-    .doc{
-      border:1px solid var(--stroke); border-radius:14px; padding:12px; background:rgba(255,255,255,.02);
-      display:grid; grid-template-columns: 1fr 180px 170px; gap:10px; align-items:center;
-    }
-    .doc h4{margin:0; font-size:13px}
-    .doc p{margin:4px 0 0; font-size:12px; color:var(--muted)}
-    .doc .badges{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
-    .badge{
-      font-size:11px; padding:4px 8px; border-radius:999px; border:1px solid var(--stroke);
-      background:var(--chip); color:var(--muted); font-family:var(--mono);
-    }
-    .status{display:flex; align-items:center; gap:8px; justify-content:flex-end; font-size:12px; color:var(--muted);}
-    .dot{width:10px; height:10px; border-radius:99px; background:var(--warn)}
-    .dot.ok{background:var(--ok)}
-    .dot.bad{background:var(--bad)}
-    .doc .actions{display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;}
-    .mini{padding:10px 12px; border-radius:12px; border:1px solid var(--stroke); background:transparent; color:var(--text); cursor:pointer; font-size:12px; min-height:40px;}
-    .mini:hover{border-color:#365a9b}
-    .toggle{display:flex; align-items:center; gap:8px; color:var(--muted); font-size:12px;}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.actions{display:flex;gap:8px}
+.btn{border:1px solid var(--stroke);background:#fff;padding:8px 12px;border-radius:10px}
+.btn.primary{background:var(--primary);color:#fff;border-color:#0a69e4}
 
-    .section{display:none}
-    .section.active{display:block}
-    .two-col{display:grid; grid-template-columns: 1.15fr .85fr; gap:14px}
+.form-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
+.col-3{grid-column:span 3}
+.col-6{grid-column:span 6}
 
-    .result-cards{display:none; margin-top:10px; gap:10px}
-    .rcard{
-      border:1px solid var(--stroke); background:rgba(255,255,255,.02); border-radius:14px;
-      padding:12px; cursor:pointer;
-    }
-    .rcard:hover{border-color:#365a9b}
-    .rcard.active{border-color:rgba(110,168,254,.95); background:rgba(110,168,254,.10)}
-    .rcard .t{display:flex; justify-content:space-between; gap:8px; align-items:flex-start}
-    .rcard .t b{font-family:var(--mono); font-size:12px}
-    .rcard .t span{font-size:11px; color:var(--muted)}
-    .rcard .m{margin-top:6px; color:var(--muted); font-size:12px; line-height:1.25}
+label{font-size:12px;color:#5f7088}
+input,select{
+  width:100%;padding:9px 10px;
+  border:1px solid var(--stroke);
+  border-radius:10px;
+  background:#fbfdff
+}
 
-    .m-topbar{display:none}
-    .drawer,.backdrop,.bottom-nav,.action-bar{display:none}
+.spacer{height:10px}
 
-    @media (max-width: 1000px){
-      .app{grid-template-columns:1fr}
-      .sidebar{display:none}
-      .main{padding:12px; padding-bottom: calc(84px + env(safe-area-inset-bottom));}
-      .topbar{display:none}
+/* Accordion */
+.accordion{border:1px solid var(--stroke);border-radius:12px;overflow:hidden}
+.accordion-header{
+  padding:12px 14px;
+  background:#eef3ff;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  font-weight:600;
+}
+.accordion-body{display:none;padding:14px}
+.accordion.open .accordion-body{display:block}
 
-      .m-topbar{
-        display:flex; align-items:center; justify-content:space-between; gap:10px;
-        position:sticky; top:0; z-index:60;
-        margin:0 0 12px;
-        padding:10px 10px;
-        border:1px solid var(--stroke);
-        border-radius:var(--r);
-        background:rgba(18,24,37,.92);
-        backdrop-filter: blur(8px);
-        box-shadow: var(--shadow);
-      }
-      .m-title{display:flex; flex-direction:column; gap:2px}
-      .m-title b{font-size:14px}
-      .m-title small{font-size:12px; color:var(--muted)}
-      .icon-btn{
-        min-width:44px; height:44px; border-radius:12px;
-        border:1px solid var(--stroke); background:rgba(255,255,255,.02);
-        color:var(--text); cursor:pointer;
-      }
+/* Upload */
+.upload-box{
+  border:2px dashed var(--stroke);
+  border-radius:12px;
+  padding:18px;
+  text-align:center;
+  background:#fbfdff;
+  cursor:pointer;
+}
+.upload-box:hover{background:#f1f6ff}
+.upload-box input{display:none}
 
-      .drawer{
-        display:block;
-        position:fixed; left:0; top:0; height:100vh;
-        width:min(86vw, 360px);
-        transform:translateX(-102%);
-        transition:transform .18s ease;
-        z-index:90;
-        background:linear-gradient(180deg, rgba(18,24,37,.98), rgba(18,24,37,.92));
-        border-right:1px solid var(--stroke);
-        padding:14px;
-        overflow:auto;
-      }
-      .drawer.open{transform:translateX(0)}
-      .backdrop{
-        display:block;
-        position:fixed; inset:0; z-index:80;
-        background:rgba(0,0,0,.45);
-        opacity:0; pointer-events:none;
-        transition:opacity .18s ease;
-      }
-      .backdrop.show{opacity:1; pointer-events:auto}
+/* Table */
+.table-wrap{border:1px solid var(--stroke);border-radius:12px;overflow:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px 12px;border-bottom:1px solid var(--stroke)}
+th{background:var(--table-head);font-size:12px;text-transform:uppercase}
 
-      .bottom-nav{
-        display:grid;
-        grid-template-columns: repeat(5, 1fr);
-        position:fixed; left:0; right:0; bottom:0; z-index:70;
-        background:rgba(18,24,37,.95);
-        border-top:1px solid var(--stroke);
-        padding-bottom: env(safe-area-inset-bottom);
-      }
-      .bottom-nav button{
-        height:56px; border:0; background:transparent; color:var(--muted);
-        font-size:11px; cursor:pointer;
-      }
-      .bottom-nav button.active{color:var(--text)}
-      .bottom-nav button span{display:block; font-size:18px; line-height:18px; margin-bottom:4px}
-
-      .action-bar{
-        display:flex; gap:10px;
-        position:fixed; left:12px; right:12px;
-        bottom: calc(56px + 10px + env(safe-area-inset-bottom));
-        z-index:75;
-      }
-      .action-bar .btn{flex:1}
-
-      .two-col{grid-template-columns:1fr}
-      .doc{grid-template-columns:1fr}
-      .status,.doc .actions{justify-content:flex-start}
-
-      #resultList{display:none}
-      .result-cards{display:flex; flex-direction:column}
-      .tabs{flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch}
-      .tabs::-webkit-scrollbar{height:0}
-    }
-
-    .toast{
-      position:fixed; right:18px; bottom: calc(18px + env(safe-area-inset-bottom));
-      padding:12px 14px; border-radius:14px; border:1px solid var(--stroke);
-      background:rgba(18,24,37,.92); box-shadow: var(--shadow); color:var(--text);
-      display:none; max-width: 420px; z-index:120;
-    }
-    .toast.show{display:block}
-    .toast small{color:var(--muted); display:block; margin-top:3px}
-  </style>
+/* Pills */
+.pill{
+  padding:3px 10px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid var(--stroke)
+}
+.status-ok{background:#d1fae5;color:#065f46}
+.status-warn{background:#ffedd5;color:#7c2d12}
+.status-bad{background:#fee2e2;color:#991b1b}
+</style>
 </head>
+
 <body>
 <div class="app">
-  <aside class="sidebar" aria-label="Menu">
-    <div class="brand">
-      <div class="logo">CX</div>
-      <div>
-        <h1>Consulta + Captação</h1>
-        <p>Mobile-ready • navegação + abas + anexos</p>
-      </div>
-    </div>
 
-    <nav class="nav">
-      <button data-section="consulta" class="active">Consulta (Siscomex-like) <span class="pill">CTRL+1</span></button>
-      <button data-section="captacao">Captação / Pré-aviso <span class="pill">CTRL+2</span></button>
-      <button data-section="documentos">📂 Documentos <span class="pill">CTRL+3</span></button>
-      <button data-section="eventos">Eventos <span class="pill">CTRL+4</span></button>
-      <button data-section="config">Configurações <span class="pill">CTRL+5</span></button>
-    </nav>
-
-    <div class="meta">
-      <b>Mobile:</b> drawer + bottom nav + cards (resultados).<br/>
-      Estado em <span class="kbd">localStorage</span>.
-    </div>
-  </aside>
-
-  <main class="main">
-    <div class="m-topbar" role="banner">
-      <button class="icon-btn" id="btnMenu" aria-label="Abrir menu">☰</button>
-      <div class="m-title">
-        <b id="mPageTitle">Consulta</b>
-        <small id="mPageSubtitle">Siscomex-like</small>
-      </div>
-      <button class="icon-btn" id="btnQuick" aria-label="Ações rápidas">⚡</button>
-    </div>
-
-    <header class="topbar">
-      <div class="title">
-        <h2 id="pageTitle">Consulta (Siscomex-like)</h2>
-        <span id="pageSubtitle">Seleção → preenche abas e docs</span>
-      </div>
-      <div class="actions">
-        <button class="btn ghost" id="btnLoadSample">Carregar dataset exemplo</button>
-        <button class="btn" id="btnExport">Exportar JSON</button>
-        <button class="btn primary" id="btnReset">Reset protótipo</button>
-      </div>
-    </header>
-
-    <div class="content">
-
-      <section class="section active" id="section-consulta">
-        <div class="two-col">
-          <div class="card">
-            <h3>Consulta Operacional</h3>
-            <p class="sub">Selecione um registro e a aplicação propaga os dados pelas abas (CE / BL / CNTR / DUE).</p>
-
-            <div class="grid">
-              <div class="field span-6">
-                <label>Entidade principal</label>
-                <select id="entityType">
-                  <option value="CE">Conhecimento (CE)</option>
-                  <option value="BL">Bill of Lading (BL)</option>
-                  <option value="CNTR">Contêiner (CNTR)</option>
-                  <option value="DUE">DUE (Exportação)</option>
-                </select>
-              </div>
-              <div class="field span-6">
-                <label>Pesquisar (ID / Ref / Navio / Cliente)</label>
-                <input id="searchBox" placeholder="Ex.: CE-2025-000184 / MSC / ACME / TCLU1234567" />
-              </div>
-              <div class="field span-12">
-                <div class="row">
-                  <button class="btn primary" id="btnSearch">Buscar</button>
-                  <button class="btn" id="btnClearSearch">Limpar</button>
-                  <span class="hint">Resultado: <span class="kbd" id="resultCount">0</span> registros</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="separator"></div>
-
-            <div class="grid">
-              <div class="field span-12">
-                <label>Resultados</label>
-                <select id="resultList" size="9" style="height:220px; font-family:var(--mono);"></select>
-                <div class="result-cards" id="resultCards"></div>
-                <p class="hint" style="margin-top:8px;">Selecionar um item atualiza as abas e o vínculo operacional de documentos.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>Snapshot do registro selecionado</h3>
-            <p class="sub">Painel rápido para treinamento (sem integrações reais).</p>
-
-            <div class="grid">
-              <div class="field span-6"><label>CE / BL / CNTR / DUE</label><input id="snapRef" readonly /></div>
-              <div class="field span-6"><label>Status operacional</label><input id="snapStatus" readonly /></div>
-              <div class="field span-6"><label>Navio / Viagem</label><input id="snapVessel" readonly /></div>
-              <div class="field span-6"><label>Cliente / Armador</label><input id="snapParty" readonly /></div>
-              <div class="field span-12"><label>Observações</label><textarea id="snapNotes" readonly></textarea></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="section-captacao">
-        <div class="card">
-          <h3>Captação / Pré-aviso</h3>
-          <p class="sub">Abas com preenchimento guiado + persistência (localStorage).</p>
-
-          <div class="tabs" id="capTabs">
-            <button class="tab active" data-tab="ce">CE</button>
-            <button class="tab" data-tab="bl">BL</button>
-            <button class="tab" data-tab="cntr">CNTR</button>
-            <button class="tab" data-tab="due">DUE</button>
-            <button class="tab" data-tab="partes">Partes & Contatos</button>
-          </div>
-
-          <div id="capTab-ce" class="capTab">
-            <div class="grid">
-              <div class="field"><label>Nº CE</label><input id="ceNumber" placeholder="CE-YYYY-XXXXXX" /></div>
-              <div class="field"><label>Modal</label><select id="ceModal"><option>Marítimo</option><option>Rodoviário</option><option>Ferroviário</option></select></div>
-              <div class="field"><label>Tipo</label><select id="ceType"><option>Importação</option><option>Exportação</option><option>Trânsito</option></select></div>
-              <div class="field span-6"><label>Porto / Recinto</label><input id="ceTerminal" placeholder="Ex.: Itajaí / EADI / CLIA" /></div>
-              <div class="field span-6"><label>ETA / Data prevista</label><input id="ceEta" type="date" /></div>
-              <div class="field span-12"><label>Descrição</label><textarea id="ceDesc"></textarea></div>
-            </div>
-          </div>
-
-          <div id="capTab-bl" class="capTab" style="display:none">
-            <div class="grid">
-              <div class="field"><label>Nº BL</label><input id="blNumber" /></div>
-              <div class="field"><label>Armador</label><input id="blCarrier" /></div>
-              <div class="field"><label>Serviço</label><input id="blService" /></div>
-              <div class="field span-6"><label>POL</label><input id="blPol" /></div>
-              <div class="field span-6"><label>POD</label><input id="blPod" /></div>
-              <div class="field span-12"><label>Notas</label><textarea id="blNotes"></textarea></div>
-            </div>
-          </div>
-
-          <div id="capTab-cntr" class="capTab" style="display:none">
-            <div class="grid">
-              <div class="field"><label>Contêiner</label><input id="cntrId" /></div>
-              <div class="field"><label>ISO / Tamanho</label>
-                <select id="cntrIso">
-                  <option>22G1 (20' Dry)</option><option>42G1 (40' Dry)</option><option>45G1 (40' HC)</option>
-                  <option>22R1 (20' Reefer)</option><option>45R1 (40' Reefer HC)</option>
-                </select>
-              </div>
-              <div class="field"><label>Condição</label><select id="cntrCond"><option>Cheio</option><option>Vazio</option><option>OOG</option></select></div>
-              <div class="field"><label>Peso bruto (kg)</label><input id="cntrWeight" type="number" /></div>
-              <div class="field"><label>IMDG</label><input id="cntrImdg" /></div>
-              <div class="field"><label>Reefer setpoint</label><input id="cntrSetpoint" /></div>
-              <div class="field span-12"><label>Instruções operacionais</label><textarea id="cntrInstr"></textarea></div>
-            </div>
-          </div>
-
-          <div id="capTab-due" class="capTab" style="display:none">
-            <div class="grid">
-              <div class="field"><label>DUE</label><input id="dueId" /></div>
-              <div class="field"><label>Canal</label><select id="dueChannel"><option>Verde</option><option>Amarelo</option><option>Vermelho</option><option>Cinza</option></select></div>
-              <div class="field"><label>Data registro</label><input id="dueDate" type="date" /></div>
-              <div class="field span-6"><label>Exportador</label><input id="dueExporter" /></div>
-              <div class="field span-6"><label>NCM principal</label><input id="dueNcm" /></div>
-              <div class="field span-12"><label>Resumo</label><textarea id="dueSummary"></textarea></div>
-            </div>
-          </div>
-
-          <div id="capTab-partes" class="capTab" style="display:none">
-            <div class="grid">
-              <div class="field span-6"><label>Consignatário</label><input id="partyConsignee" /></div>
-              <div class="field span-6"><label>Notificante</label><input id="partyNotify" /></div>
-              <div class="field span-6"><label>Despachante / Agente</label><input id="partyBroker" /></div>
-              <div class="field span-6"><label>Transportador</label><input id="partyTrucker" /></div>
-              <div class="field span-12"><label>Observações</label><textarea id="partyNotes"></textarea></div>
-            </div>
-          </div>
-
-          <div class="separator"></div>
-          <div class="row">
-            <button class="btn primary" id="btnSaveCap">Salvar abas</button>
-            <button class="btn" id="btnPrefillCap">Pré-preencher</button>
-            <span class="hint">Atalho: <span class="kbd">Ctrl</span>+<span class="kbd">S</span></span>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="section-documentos">
-        <div class="two-col">
-          <div class="card">
-            <h3>📂 Upload documental inteligente</h3>
-            <p class="sub">Drag & drop + classificação sugerida + vínculo (CE/BL/CNTR/DUE).</p>
-
-            <div class="dropzone" id="dropzone">
-              <div class="dz-left">
-                <strong>Arraste e solte arquivos aqui</strong>
-                <small>PDF, PNG, JPG, XML • protótipo (sem backend)</small>
-              </div>
-              <div class="row">
-                <input id="fileInput" type="file" multiple style="display:none" accept=".pdf,.png,.jpg,.jpeg,.xml" />
-                <input id="fileInputCamera" type="file" multiple style="display:none" accept="image/*,application/pdf" capture="environment" />
-                <button class="btn primary" id="btnPickFiles">Selecionar</button>
-                <button class="btn" id="btnPickCamera">Câmera</button>
-                <button class="btn" id="btnAutoClassify">🧠 Classificar</button>
-              </div>
-            </div>
-
-            <div class="doc-list" id="docList"></div>
-          </div>
-
-          <div class="card">
-            <h3>Vínculo operacional</h3>
-            <p class="sub">Herdado do registro selecionado na <b>Consulta</b>.</p>
-
-            <div class="grid">
-              <div class="field span-6"><label>Referência ativa</label><input id="linkRef" readonly /></div>
-              <div class="field span-6"><label>Tipo</label><input id="linkType" readonly /></div>
-              <div class="field span-12"><label>Checklist sugerido</label><textarea id="linkChecklist" readonly></textarea></div>
-            </div>
-
-            <div class="separator"></div>
-
-            <div class="toggle">
-              <input type="checkbox" id="toggleStrict" />
-              <label for="toggleStrict" style="margin:0">Exigir checklist completo</label>
-            </div>
-
-            <div class="separator"></div>
-
-            <div class="row">
-              <button class="btn primary" id="btnBindAll">Vincular docs</button>
-              <button class="btn" id="btnClearDocs">Limpar</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="section-eventos">
-        <div class="card">
-          <h3>Eventos & Trilha</h3>
-          <p class="sub">Log para simular PCS / RFB / TOS.</p>
-
-          <div class="grid">
-            <div class="field span-6">
-              <label>Gerar evento</label>
-              <select id="evtType">
-                <option value="CE_RECEBIDO">CE_RECEBIDO</option>
-                <option value="BL_VINCULADO">BL_VINCULADO</option>
-                <option value="CNTR_GATE_IN">CNTR_GATE_IN</option>
-                <option value="CNTR_INSPECIONADO">CNTR_INSPECIONADO</option>
-                <option value="DOC_ANEXADO">DOC_ANEXADO</option>
-                <option value="LIBERACAO_ADUANA">LIBERACAO_ADUANA</option>
-                <option value="CNTR_GATE_OUT">CNTR_GATE_OUT</option>
-              </select>
-            </div>
-            <div class="field span-6"><label>Mensagem</label><input id="evtMsg" placeholder="Ex.: Documento fiscal validado..." /></div>
-            <div class="field span-12">
-              <button class="btn primary" id="btnAddEvent">Adicionar</button>
-              <button class="btn" id="btnClearEvents">Limpar</button>
-            </div>
-            <div class="field span-12"><label>Log</label><textarea id="evtLog" style="min-height:260px; font-family:var(--mono)" readonly></textarea></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="section-config">
-        <div class="card">
-          <h3>Configurações</h3>
-          <p class="sub">Preferências e ações gerais.</p>
-
-          <div class="grid">
-            <div class="field span-6">
-              <label>Modo</label>
-              <select id="cfgMode">
-                <option value="treinamento">Treinamento (mais mensagens)</option>
-                <option value="demo">Demo (limpo)</option>
-              </select>
-            </div>
-            <div class="field span-6">
-              <label>Auto-salvar</label>
-              <select id="cfgAutosave">
-                <option value="on">Ligado</option>
-                <option value="off">Desligado</option>
-              </select>
-            </div>
-            <div class="field span-12"><label>Notas do instrutor</label><textarea id="cfgNotes"></textarea></div>
-
-            <div class="field span-12">
-              <div class="row">
-                <button class="btn ghost" id="btnLoadSample2">Carregar dataset</button>
-                <button class="btn" id="btnExport2">Exportar JSON</button>
-                <button class="btn primary" id="btnReset2">Reset</button>
-              </div>
-            </div>
-
-            <div class="field span-12"><button class="btn primary" id="btnSaveCfg">Salvar configurações</button></div>
-          </div>
-        </div>
-      </section>
-
-    </div>
-  </main>
-</div>
-
-<div id="backdrop" class="backdrop" aria-hidden="true"></div>
-<aside id="drawer" class="drawer" aria-label="Menu mobile">
-  <div class="brand" style="margin-bottom:12px;">
-    <div class="logo">CX</div>
-    <div>
-      <h1 style="margin:0; font-size:14px;">Consulta + Captação</h1>
-      <p style="margin:2px 0 0; font-size:12px; color:var(--muted);">Menu mobile</p>
-    </div>
+<header>
+  <h1>Consulta CE (Siscomex)</h1>
+  <div class="actions">
+    <button class="btn">Limpar</button>
+    <button class="btn primary">Consultar Siscomex</button>
   </div>
-  <nav class="nav" id="drawerNav">
-    <button data-section="consulta" class="active">Consulta <span class="pill">1</span></button>
-    <button data-section="captacao">Captação <span class="pill">2</span></button>
-    <button data-section="documentos">Docs <span class="pill">3</span></button>
-    <button data-section="eventos">Eventos <span class="pill">4</span></button>
-    <button data-section="config">Config <span class="pill">5</span></button>
-  </nav>
-  <div class="meta" style="margin-top:12px;">Dica: use a barra inferior para navegar.</div>
-</aside>
+</header>
 
-<div class="action-bar" id="actionBar">
-  <button class="btn primary" id="mPrimary">Ação</button>
-  <button class="btn" id="mSecondary">Secundária</button>
+<!-- Parâmetros -->
+<div class="card">
+<h2>Parâmetros de Pesquisa</h2>
+
+<div class="form-grid">
+  <div class="col-3">
+    <label>Tipo de Chave</label>
+    <select><option>Contêiner</option><option>BL</option><option>CE</option></select>
+  </div>
+  <div class="col-6">
+    <label>Valor</label>
+    <input placeholder="Informe CE, BL ou contêiner">
+  </div>
+  <div class="col-3">
+    <label>Ambiente</label>
+    <select><option>Produção</option><option>Homologação</option></select>
+  </div>
 </div>
 
-<nav class="bottom-nav" aria-label="Navegação mobile">
-  <button data-go="consulta" class="active"><span>🔎</span>Consulta</button>
-  <button data-go="captacao"><span>🧾</span>Captação</button>
-  <button data-go="documentos"><span>📎</span>Docs</button>
-  <button data-go="eventos"><span>🧩</span>Eventos</button>
-  <button data-go="config"><span>⚙️</span>Config</button>
-</nav>
+<div class="spacer"></div>
 
-<div class="toast" id="toast"></div>
+<!-- Accordion Documentos -->
+<div class="accordion" id="accordionDocs">
+  <div class="accordion-header">
+    <span>📂 Documentos (Upload Inteligente)</span>
+    <span id="accIcon">▼</span>
+  </div>
+
+  <div class="accordion-body">
+
+    <div class="upload-box" id="uploadBox">
+      Clique ou arraste arquivos aqui (PDF / Imagem)
+      <input type="file" id="uploadDocs" multiple>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Arquivo</th>
+            <th>Vínculo</th>
+            <th>Data</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyDocs"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+</div>
+
+</div>
 
 <script>
-const LS={dataset:"cx.dataset.v2",selected:"cx.selected.v2",captacao:"cx.captacao.v2",documentos:"cx.documentos.v2",eventos:"cx.eventos.v2",config:"cx.config.v2"};
-const el=(id)=>document.getElementById(id);
-const escapeHtml=(s)=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const toast=(title,msg="")=>{const t=el("toast");t.innerHTML=`<b>${escapeHtml(title)}</b>${msg?`<small>${escapeHtml(msg)}</small>`:""}`;t.classList.add("show");clearTimeout(window.__t);window.__t=setTimeout(()=>t.classList.remove("show"),2200);};
-const nowIso=()=>new Date().toISOString();
-const shortTs=()=>new Date().toISOString().replace("T"," ").slice(0,19);
-const isMobile=()=>window.matchMedia && window.matchMedia("(max-width: 1000px)").matches;
-
-const defaultConfig={mode:"treinamento",autosave:"on",notes:""};
-function loadConfig(){const cfg=JSON.parse(localStorage.getItem(LS.config)||"null")||defaultConfig;el("cfgMode").value=cfg.mode||"treinamento";el("cfgAutosave").value=cfg.autosave||"on";el("cfgNotes").value=cfg.notes||"";return cfg;}
-function saveConfig(){const cfg={mode:el("cfgMode").value,autosave:el("cfgAutosave").value,notes:el("cfgNotes").value};localStorage.setItem(LS.config,JSON.stringify(cfg));toast("Configurações salvas");return cfg;}
-
-function sampleDataset(){return[
-  {id:"CE-2025-000184",type:"CE",status:"EM_ANALISE",vessel:"MSC FORTALEZA / 021W",party:"ACME Importadora",notes:"Pendente: nota fiscal e packing list. Possível inspeção no Gate.",links:{BL:"MSCU1234567890",CNTR:"TCLU1234567",DUE:""},checklist:["Invoice","Packing List","CE (PDF)","Comprovante de Pagamento"]},
-  {id:"BL-MAEU9988776655",type:"BL",status:"LIBERADO",vessel:"MAERSK NAPOLI / 114S",party:"Beta Química S/A",notes:"Hold removido; pronto para gate-out após agendamento.",links:{CE:"CE-2025-000251",CNTR:"MSCU7654321",DUE:""},checklist:["BL (PDF)","Comprovante de Frete","Manifesto","Invoice"]},
-  {id:"TCLU1234567",type:"CNTR",status:"NO_PATIO",vessel:"MSC FORTALEZA / 021W",party:"ACME Importadora",notes:"Reefer? Não. IMDG: 3. Priorizar para inspeção e liberação.",links:{CE:"CE-2025-000184",BL:"MSCU1234567890",DUE:""},checklist:["Gate In (EIR)","VGM","Foto Lacres","Invoice","Packing List"]},
-  {id:"DUE-2025-001033",type:"DUE",status:"CANAL_AMARELO",vessel:"CMA CGM TIBETE / 301E",party:"Exportadora Delta",notes:"Canal amarelo: aguardar parametrização.",links:{CNTR:"CMAU9988776",CE:"",BL:"",DUE:"DUE-2025-001033"},checklist:["DUE","NF-e","DU-E anexos","Packing List","Booking"]}
-];}
-function loadDataset(){return JSON.parse(localStorage.getItem(LS.dataset)||"null")||[];}
-function saveDataset(arr){localStorage.setItem(LS.dataset,JSON.stringify(arr||[]));}
-function setSelected(obj){
-  localStorage.setItem(LS.selected,JSON.stringify(obj||null));
-  renderSnapshot(obj); renderLinkage(obj);
-  highlightSelectedCard(obj?.id);
-}
-function getSelected(){return JSON.parse(localStorage.getItem(LS.selected)||"null");}
-
-function renderSnapshot(obj){
-  el("snapRef").value=obj?.id||""; el("snapStatus").value=obj?.status||""; el("snapVessel").value=obj?.vessel||"";
-  el("snapParty").value=obj?.party||""; el("snapNotes").value=obj?.notes||"";
-}
-function renderLinkage(obj){
-  el("linkRef").value=obj?.id||""; el("linkType").value=obj?.type||"";
-  el("linkChecklist").value=(obj?.checklist||[]).map(x=>`- ${x}`).join("\n")||"- (sem checklist)";
-  if(obj) propagateToCaptacao(obj);
-}
-function populateResults(list){
-  const box=el("resultList"); box.innerHTML="";
-  list.forEach(item=>{
-    const opt=document.createElement("option");
-    opt.value=item.id;
-    opt.textContent=`[${item.type}] ${item.id} • ${item.status} • ${item.party}`;
-    box.appendChild(opt);
-  });
-
-  const cards=el("resultCards"); cards.innerHTML="";
-  list.forEach(item=>{
-    const div=document.createElement("div");
-    div.className="rcard";
-    div.dataset.id=item.id;
-    div.innerHTML=`
-      <div class="t">
-        <b>[${escapeHtml(item.type)}] ${escapeHtml(item.id)}</b>
-        <span>${escapeHtml(item.status)}</span>
-      </div>
-      <div class="m">${escapeHtml(item.party)}<br/>${escapeHtml(item.vessel)}</div>
-    `;
-    div.addEventListener("click",()=>{
-      const ds=loadDataset();
-      const obj=ds.find(x=>x.id===item.id);
-      if(obj) setSelected(obj);
-      toast("Selecionado", item.id);
-    });
-    cards.appendChild(div);
-  });
-
-  el("resultCount").textContent=String(list.length);
-
-  if(list[0]){
-    el("resultList").value=list[0].id;
-    highlightSelectedCard(getSelected()?.id || list[0].id);
-  }
-}
-function highlightSelectedCard(id){
-  const cards=el("resultCards");
-  if(!cards) return;
-  cards.querySelectorAll(".rcard").forEach(c=>c.classList.toggle("active", c.dataset.id===id));
-}
-
-function search(){
-  const ds=loadDataset();
-  const q=el("searchBox").value.trim().toLowerCase();
-  const type=el("entityType").value;
-  const filtered=ds.filter(x=>x.type===type && (!q || (`${x.id} ${x.status} ${x.vessel} ${x.party} ${x.notes} ${JSON.stringify(x.links||{})}`.toLowerCase().includes(q))));
-  populateResults(filtered);
-  if(filtered[0]) setSelected(filtered[0]);
-  toast("Busca concluída", `${filtered.length} registro(s)`);
-}
-function loadSample(){
-  const ds=sampleDataset();
-  saveDataset(ds);
-  populateResults(ds.filter(x=>x.type===el("entityType").value));
-  setSelected(ds[0]);
-  toast("Dataset carregado");
-}
-function resetAll(){
-  Object.values(LS).forEach(k=>localStorage.removeItem(k));
-  location.hash=""; location.reload();
-}
-
-/* Captação */
-function getCaptacao(){return JSON.parse(localStorage.getItem(LS.captacao)||"null")||{};}
-function saveCaptacao(){
-  const data={
-    ceNumber:el("ceNumber").value,ceModal:el("ceModal").value,ceType:el("ceType").value,ceTerminal:el("ceTerminal").value,ceEta:el("ceEta").value,ceDesc:el("ceDesc").value,
-    blNumber:el("blNumber").value,blCarrier:el("blCarrier").value,blService:el("blService").value,blPol:el("blPol").value,blPod:el("blPod").value,blNotes:el("blNotes").value,
-    cntrId:el("cntrId").value,cntrIso:el("cntrIso").value,cntrCond:el("cntrCond").value,cntrWeight:el("cntrWeight").value,cntrImdg:el("cntrImdg").value,cntrSetpoint:el("cntrSetpoint").value,cntrInstr:el("cntrInstr").value,
-    dueId:el("dueId").value,dueChannel:el("dueChannel").value,dueDate:el("dueDate").value,dueExporter:el("dueExporter").value,dueNcm:el("dueNcm").value,dueSummary:el("dueSummary").value,
-    partyConsignee:el("partyConsignee").value,partyNotify:el("partyNotify").value,partyBroker:el("partyBroker").value,partyTrucker:el("partyTrucker").value,partyNotes:el("partyNotes").value,
-    updatedAt:nowIso()
-  };
-  localStorage.setItem(LS.captacao,JSON.stringify(data));
-  toast("Captação salva");
-}
-function loadCaptacaoIntoForm(){
-  const d=getCaptacao(); const set=(k,v)=>{if(el(k)) el(k).value=v??"";};
-  ["ceNumber","ceTerminal","ceEta","ceDesc","blNumber","blCarrier","blService","blPol","blPod","blNotes","cntrId","cntrWeight","cntrImdg","cntrSetpoint","cntrInstr","dueId","dueDate","dueExporter","dueNcm","dueSummary","partyConsignee","partyNotify","partyBroker","partyTrucker","partyNotes"].forEach(k=>set(k,d[k]));
-  if(d.ceModal) el("ceModal").value=d.ceModal;
-  if(d.ceType) el("ceType").value=d.ceType;
-  if(d.cntrIso) el("cntrIso").value=d.cntrIso;
-  if(d.cntrCond) el("cntrCond").value=d.cntrCond;
-  if(d.dueChannel) el("dueChannel").value=d.dueChannel;
-}
-function propagateToCaptacao(sel,force=false){
-  const safe=(id,val)=>{const n=el(id); if(!n) return; if(force || !n.value) n.value=val??"";};
-  if(sel.type==="CE"){safe("ceNumber",sel.id);safe("ceDesc",sel.notes);safe("blNumber",sel.links?.BL||"");safe("cntrId",sel.links?.CNTR||"");safe("partyConsignee",sel.party);}
-  if(sel.type==="BL"){safe("blNumber",sel.id.replace(/^BL-/,""));safe("ceNumber",sel.links?.CE||"");safe("cntrId",sel.links?.CNTR||"");safe("partyConsignee",sel.party);safe("blNotes",sel.notes);}
-  if(sel.type==="CNTR"){safe("cntrId",sel.id);safe("ceNumber",sel.links?.CE||"");safe("blNumber",sel.links?.BL||"");safe("cntrInstr",sel.notes);safe("partyConsignee",sel.party);}
-  if(sel.type==="DUE"){safe("dueId",sel.id);safe("dueSummary",sel.notes);safe("cntrId",sel.links?.CNTR||"");safe("partyConsignee",sel.party);}
-  if(loadConfig().autosave==="on") saveCaptacao();
-}
-
-/* Docs */
-function getDocs(){return JSON.parse(localStorage.getItem(LS.documentos)||"null")||[];}
-function saveDocs(d){localStorage.setItem(LS.documentos,JSON.stringify(d||[]));}
-function humanSize(b){if(b<1024) return b+" B"; const kb=b/1024; if(kb<1024) return kb.toFixed(1)+" KB"; return (kb/1024).toFixed(2)+" MB";}
-function guessClass(name){
-  const n=name.toLowerCase();
-  if(n.includes("invoice")||n.includes("fatura")||n.includes("nf")||n.endsWith(".xml")) return "FISCAL";
-  if(n.includes("packing")) return "PACKING_LIST";
-  if(n.includes("bl")) return "BL";
-  if(n.includes("ce")) return "CE";
-  if(n.includes("due")) return "DUE";
-  if(n.includes("eir")||n.includes("gate")) return "EIR";
-  if(n.includes("foto")||n.includes("image")||n.endsWith(".jpg")||n.endsWith(".png")||n.endsWith(".jpeg")) return "IMAGEM";
-  return "OUTROS";
-}
-function docStatus(doc){
-  const strict=el("toggleStrict").checked;
-  const hasLink=!!doc.linkRef;
-  const hasClass=!!doc.classification;
-  if(!hasLink||!hasClass) return {level:"warn",label:"Pendente vínculo/classificação"};
-  if(strict) return {level:"ok",label:"Válido (modo estrito)"};
-  return {level:"ok",label:"Válido"};
-}
-function renderDocs(){
-  const docs=getDocs(); const list=el("docList"); list.innerHTML="";
-  if(!docs.length){list.innerHTML=`<div class="hint">Nenhum documento anexado ainda.</div>`; return;}
-  docs.slice().reverse().forEach(doc=>{
-    const s=docStatus(doc);
-    const dotClass=s.level==="ok"?"ok":(s.level==="bad"?"bad":"");
-    const row=document.createElement("div"); row.className="doc";
-    row.innerHTML=`
-      <div>
-        <h4>${escapeHtml(doc.name)}</h4>
-        <p>${escapeHtml(doc.mime)} • ${escapeHtml(humanSize(doc.size))} • ${escapeHtml(new Date(doc.addedAt).toLocaleString())}</p>
-        <div class="badges">
-          <span class="badge">class=${escapeHtml(doc.classification||"—")}</span>
-          <span class="badge">vinc=${escapeHtml(doc.linkRef||"—")}</span>
-          <span class="badge">tipo=${escapeHtml(doc.linkType||"—")}</span>
-        </div>
-      </div>
-      <div class="status"><span class="dot ${dotClass}"></span><span>${escapeHtml(s.label)}</span></div>
-      <div class="actions">
-        <button class="mini" data-act="bind" data-id="${escapeHtml(doc.id)}">Vincular</button>
-        <button class="mini" data-act="classify" data-id="${escapeHtml(doc.id)}">Classificar</button>
-        <button class="mini" data-act="remove" data-id="${escapeHtml(doc.id)}">Remover</button>
-      </div>`;
-    list.appendChild(row);
-  });
-}
-function addFiles(fileList){
-  const docs=getDocs();
-  const sel=getSelected();
-  Array.from(fileList).forEach(f=>docs.push({id:crypto.randomUUID(),name:f.name,size:f.size,mime:f.type||"application/octet-stream",classification:"",linkRef:sel?.id||"",linkType:sel?.type||"",addedAt:Date.now()}));
-  saveDocs(docs); renderDocs();
-  toast("Arquivos adicionados", `${fileList.length} arquivo(s)`);
-}
-function bindDoc(id){
-  const docs=getDocs(); const sel=getSelected(); const d=docs.find(x=>x.id===id);
-  if(!d){toast("Documento não encontrado");return;}
-  if(!sel){toast("Nenhum registro ativo","Selecione um item em Consulta.");return;}
-  d.linkRef=sel.id; d.linkType=sel.type;
-  saveDocs(docs); renderDocs();
-  toast("Vinculado", `${d.name} → ${sel.id}`);
-}
-function classifyDoc(id){
-  const docs=getDocs(); const d=docs.find(x=>x.id===id);
-  if(!d){toast("Documento não encontrado");return;}
-  d.classification=guessClass(d.name);
-  saveDocs(docs); renderDocs();
-  toast("Classificação sugerida", `${d.name}: ${d.classification}`);
-}
-function removeDoc(id){saveDocs(getDocs().filter(x=>x.id!==id)); renderDocs(); toast("Documento removido");}
-function bindAllDocs(){
-  const docs=getDocs(); const sel=getSelected();
-  if(!sel){toast("Nenhum registro ativo","Selecione um item em Consulta.");return;}
-  docs.forEach(d=>{d.linkRef=sel.id; d.linkType=sel.type;});
-  saveDocs(docs); renderDocs();
-  toast("Docs vinculados", `Todos → ${sel.id}`);
-}
-function autoClassifyAll(){
-  const docs=getDocs();
-  docs.forEach(d=>{if(!d.classification) d.classification=guessClass(d.name);});
-  saveDocs(docs); renderDocs();
-  toast("Classificação aplicada");
-}
-
-/* Eventos */
-function getEvents(){return JSON.parse(localStorage.getItem(LS.eventos)||"null")||[];}
-function saveEvents(e){localStorage.setItem(LS.eventos,JSON.stringify(e||[]));}
-function renderEvents(){
-  const ev=getEvents();
-  el("evtLog").value=ev.map(x=>`${x.ts}  |  ${x.type.padEnd(18)} |  ref=${x.ref||"-"}  |  ${x.msg||""}`).join("\n");
-}
-function addEvent(){
-  const sel=getSelected();
-  const ev={ts:shortTs(),type:el("evtType").value,ref:sel?.id||"",msg:el("evtMsg").value.trim()};
-  const arr=getEvents(); arr.push(ev);
-  saveEvents(arr); renderEvents();
-  el("evtMsg").value="";
-  toast("Evento registrado", ev.type+(ev.ref?` • ${ev.ref}`:""));
-}
-
-const titles={
-  consulta:["Consulta (Siscomex-like)","Seleção → preenche abas e docs"],
-  captacao:["Captação / Pré-aviso","Tabs roláveis no mobile + autosave"],
-  documentos:["📂 Documentos","Upload + câmera + vínculo operacional"],
-  eventos:["Eventos & trilha","Log PCS/RFB/TOS"],
-  config:["Configurações","Preferências e ações gerais"]
+// Accordion
+const acc=document.getElementById('accordionDocs');
+acc.querySelector('.accordion-header').onclick=()=>{
+  acc.classList.toggle('open');
+  document.getElementById('accIcon').textContent=acc.classList.contains('open')?'▲':'▼';
 };
-function updateTitles(key){
-  el("pageTitle").textContent=titles[key]?.[0]||"Tela";
-  el("pageSubtitle").textContent=titles[key]?.[1]||"";
-  el("mPageTitle").textContent=(titles[key]?.[0]||"Tela").replace(" (Siscomex-like)","");
-  el("mPageSubtitle").textContent=titles[key]?.[1]||"";
-}
-function activateSection(key){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  el(`section-${key}`).classList.add("active");
-  document.querySelectorAll(".sidebar .nav button").forEach(b=>b.classList.toggle("active", b.dataset.section===key));
-  document.querySelectorAll("#drawerNav button").forEach(b=>b.classList.toggle("active", b.dataset.section===key));
-  document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.toggle("active", b.dataset.go===key));
-  updateTitles(key);
-  location.hash=key;
-  syncActionBar(key);
-}
-window.activateSection=activateSection;
 
-function activateCapTab(tab){
-  document.querySelectorAll("#capTabs .tab").forEach(t=>t.classList.toggle("active", t.dataset.tab===tab));
-  document.querySelectorAll(".capTab").forEach(div=>div.style.display="none");
-  const target=el(`capTab-${tab}`); if(target) target.style.display="block";
+// Helpers
+function tipoDoc(nome){
+  nome=nome.toLowerCase();
+  if(nome.includes('di'))return'DI';
+  if(nome.includes('du'))return'DU-E';
+  if(nome.includes('nf'))return'NF-e';
+  if(nome.includes('bl'))return'BL';
+  return'Outro';
 }
-
-function exportJson(){
-  const payload={exportedAt:nowIso(),dataset:loadDataset(),selected:getSelected(),captacao:getCaptacao(),documentos:getDocs(),eventos:getEvents(),config:JSON.parse(localStorage.getItem(LS.config)||"null")||defaultConfig};
-  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download=`consulta_captacao_export_${new Date().toISOString().slice(0,10)}.json`;
-  document.body.appendChild(a); a.click(); a.remove();
-  toast("Exportado","JSON baixado.");
+function vinculoDoc(nome){
+  nome=nome.toLowerCase();
+  if(nome.includes('ce'))return'CE';
+  if(nome.includes('bl'))return'BL';
+  if(nome.match(/[a-z]{4}\d{7}/))return'Contêiner';
+  return'Manual';
+}
+function statusDoc(file){
+  if(file.type==='application/pdf')return'Validado';
+  if(file.type.startsWith('image/'))return'Pendente';
+  return'Rejeitado';
 }
 
-/* Mobile shell */
-function openDrawer(){el("drawer").classList.add("open"); el("backdrop").classList.add("show");}
-function closeDrawer(){el("drawer").classList.remove("open"); el("backdrop").classList.remove("show");}
-function syncActionBar(sectionKey){
-  const ab=el("actionBar");
-  if(!ab) return;
-  if(!isMobile()){ab.style.display="none"; return;}
-  ab.style.display="flex";
-  const p=el("mPrimary"), s=el("mSecondary");
-  p.textContent="Carregar dataset"; p.onclick=loadSample;
-  s.textContent="Exportar JSON"; s.onclick=exportJson;
+// Upload
+const upload=document.getElementById('uploadDocs');
+const box=document.getElementById('uploadBox');
+const tbody=document.getElementById('tbodyDocs');
 
-  if(sectionKey==="consulta"){p.textContent="Buscar"; p.onclick=search; s.textContent="Dataset"; s.onclick=loadSample;}
-  if(sectionKey==="captacao"){p.textContent="Salvar"; p.onclick=saveCaptacao; s.textContent="Pré-preencher"; s.onclick=()=>propagateToCaptacao(getSelected(),true);}
-  if(sectionKey==="documentos"){p.textContent="Vincular docs"; p.onclick=bindAllDocs; s.textContent="Classificar"; s.onclick=autoClassifyAll;}
-  if(sectionKey==="eventos"){p.textContent="Adicionar evento"; p.onclick=addEvent; s.textContent="Limpar log"; s.onclick=()=>{localStorage.removeItem(LS.eventos); renderEvents(); toast("Eventos limpos");};}
-  if(sectionKey==="config"){p.textContent="Salvar config"; p.onclick=saveConfig; s.textContent="Reset"; s.onclick=resetAll;}
-}
+box.onclick=()=>upload.click();
 
-function wire(){
-  // Desktop nav
-  document.querySelectorAll(".sidebar .nav button").forEach(btn=>btn.addEventListener("click",()=>activateSection(btn.dataset.section)));
-  // Drawer nav
-  document.querySelectorAll("#drawerNav button").forEach(btn=>btn.addEventListener("click",()=>{activateSection(btn.dataset.section); closeDrawer();}));
-  // Bottom nav
-  document.querySelectorAll(".bottom-nav button").forEach(btn=>btn.addEventListener("click",()=>activateSection(btn.dataset.go)));
-
-  // Mobile controls
-  el("btnMenu").addEventListener("click",openDrawer);
-  el("backdrop").addEventListener("click",closeDrawer);
-  el("btnQuick").addEventListener("click",()=>{const cur=(location.hash||"#consulta").replace("#",""); syncActionBar(cur); toast("Ações rápidas","Use os botões acima da barra inferior.");});
-
-  // Hash init
-  const hash=(location.hash||"").replace("#","");
-  if(hash && titles[hash]) activateSection(hash);
-
-  // Keyboard shortcuts
-  window.addEventListener("keydown",(e)=>{
-    if(e.ctrlKey && !e.shiftKey && !e.altKey){
-      if(e.key>="1" && e.key<="5"){
-        e.preventDefault();
-        const map={"1":"consulta","2":"captacao","3":"documentos","4":"eventos","5":"config"};
-        activateSection(map[e.key]);
-      }
-      if(e.key.toLowerCase()==="s"){
-        const cur=(location.hash||"#consulta").replace("#","");
-        if(cur==="captacao"){e.preventDefault(); saveCaptacao();}
-      }
-    }
-    if(e.key==="Escape"){closeDrawer();}
+upload.onchange=()=>{
+  [...upload.files].forEach(f=>{
+    const status=statusDoc(f);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td>${tipoDoc(f.name)}</td>
+      <td>${f.name}</td>
+      <td>${vinculoDoc(f.name)}</td>
+      <td>${new Date().toISOString().slice(0,10)}</td>
+      <td><span class="pill ${
+        status==='Validado'?'status-ok':
+        status==='Pendente'?'status-warn':'status-bad'
+      }">${status}</span></td>`;
+    tbody.appendChild(tr);
   });
-
-  // Consulta
-  el("entityType").addEventListener("change",()=>populateResults(loadDataset().filter(x=>x.type===el("entityType").value)));
-  el("btnSearch").addEventListener("click",search);
-  el("btnClearSearch").addEventListener("click",()=>{el("searchBox").value=""; search();});
-  el("resultList").addEventListener("change",()=>{
-    const ds=loadDataset();
-    const id=el("resultList").value;
-    const obj=ds.find(x=>x.id===id);
-    if(obj) setSelected(obj);
-  });
-
-  // Captação tabs
-  document.querySelectorAll("#capTabs .tab").forEach(t=>t.addEventListener("click",()=>activateCapTab(t.dataset.tab)));
-  el("btnSaveCap").addEventListener("click",saveCaptacao);
-  el("btnPrefillCap").addEventListener("click",()=>propagateToCaptacao(getSelected(),true));
-  document.querySelectorAll("#section-captacao input, #section-captacao select, #section-captacao textarea").forEach(n=>n.addEventListener("input",()=>{if(loadConfig().autosave==="on") saveCaptacao();}));
-
-  // Docs
-  el("btnPickFiles").addEventListener("click",()=>el("fileInput").click());
-  el("btnPickCamera").addEventListener("click",()=>el("fileInputCamera").click());
-  el("fileInput").addEventListener("change",(e)=>{if(e.target.files?.length) addFiles(e.target.files); e.target.value="";});
-  el("fileInputCamera").addEventListener("change",(e)=>{if(e.target.files?.length) addFiles(e.target.files); e.target.value="";});
-
-  const dz=el("dropzone");
-  ["dragenter","dragover"].forEach(evt=>dz.addEventListener(evt,(e)=>{e.preventDefault(); e.stopPropagation(); dz.classList.add("dragover");}));
-  ["dragleave","drop"].forEach(evt=>dz.addEventListener(evt,(e)=>{e.preventDefault(); e.stopPropagation(); dz.classList.remove("dragover");}));
-  dz.addEventListener("drop",(e)=>{const files=e.dataTransfer?.files; if(files?.length) addFiles(files);});
-
-  el("btnAutoClassify").addEventListener("click",autoClassifyAll);
-  el("btnBindAll").addEventListener("click",bindAllDocs);
-  el("btnClearDocs").addEventListener("click",()=>{localStorage.removeItem(LS.documentos); renderDocs(); toast("Documentos limpos");});
-  el("docList").addEventListener("click",(e)=>{
-    const b=e.target.closest("button"); if(!b) return;
-    const act=b.dataset.act; const id=b.dataset.id;
-    if(act==="bind") bindDoc(id);
-    if(act==="classify") classifyDoc(id);
-    if(act==="remove") removeDoc(id);
-  });
-
-  // Eventos
-  el("btnAddEvent").addEventListener("click",addEvent);
-  el("btnClearEvents").addEventListener("click",()=>{localStorage.removeItem(LS.eventos); renderEvents(); toast("Eventos limpos");});
-
-  // Config / desktop actions
-  el("btnSaveCfg").addEventListener("click",saveConfig);
-  el("btnLoadSample").addEventListener("click",loadSample);
-  el("btnExport").addEventListener("click",exportJson);
-  el("btnReset").addEventListener("click",resetAll);
-
-  // Config duplicate buttons
-  el("btnLoadSample2").addEventListener("click",loadSample);
-  el("btnExport2").addEventListener("click",exportJson);
-  el("btnReset2").addEventListener("click",resetAll);
-
-  // responsive action bar
-  window.addEventListener("resize",()=>{
-    const cur=(location.hash||"#consulta").replace("#","");
-    syncActionBar(cur);
-  });
-}
-
-function init(){
-  loadConfig(); loadCaptacaoIntoForm();
-  const ds=loadDataset();
-  if(!ds.length){
-    populateResults([]);
-    renderSnapshot(null); renderLinkage(null);
-  } else {
-    populateResults(ds.filter(x=>x.type===el("entityType").value));
-    setSelected(getSelected()||ds[0]);
-  }
-  renderDocs(); renderEvents();
-  wire();
-  const cur=(location.hash||"#consulta").replace("#","");
-  updateTitles(cur);
-  syncActionBar(cur);
-  if(!loadDataset().length) toast("Protótipo pronto","No mobile: use ‘Dataset’ e navegue na barra inferior.");
-}
-init();
+  upload.value='';
+};
 </script>
+
 </body>
 </html>
