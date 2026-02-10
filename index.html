@@ -1,282 +1,131 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Cadastros – Importação de Dados Logcomex • Captação (Topo Compacto + restante)</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Captação • HXtos CY (Light v4)</title>
 <style>
-  :root{
-    --bg:#f7fafc; --panel:#ffffff; --panel-2:#f1f5f9; --stroke:#d8e1ee;
-    --text:#0f172a; --muted:#475569; --cyan:#06b6d4; --blue:#2563eb; --blue-dark:#1e40af;
-    --grid-header:#1d4ed8; --grid-header-text:#f8fafc; --row-1:#eef6ff; --row-2:#e7f3ff;
-  }
-  *{ box-sizing:border-box; }
-  body{ margin:0; background:linear-gradient(180deg,var(--bg),#fff 55%); color:var(--text);
-        font:12px/1.3 "Inter","Segoe UI",Helvetica,Arial,sans-serif;}
-  .titlebar{ background:#e2e8f0; border-bottom:1px solid var(--stroke); padding:8px 12px; font-weight:900; }
-  .wrap{ padding:10px; }
-  .window{ background:var(--panel); border:1px solid var(--stroke); border-radius:12px; padding:10px; box-shadow:0 2px 12px rgba(2,8,23,.06); }
-
-  /* TOP SPLIT (compact) */
-  .split{ display:grid; grid-template-columns: 1fr 64px 1fr 260px; gap:8px; align-items:start; }
-  .card{ background:var(--panel-2); border:1px solid var(--stroke); border-radius:10px; overflow:hidden; }
-  .card-header{ padding:8px 10px; background:linear-gradient(180deg,#e0ecff,#d8e7ff); border-bottom:1px solid #cfe0ff; font-weight:800; }
-  .fields{ display:grid; grid-template-columns:repeat(2, minmax(160px,1fr)); gap:8px; padding:8px 10px; }
-  .fields .full{ grid-column:span 2; }
-  label{ display:block; font-size:10px; text-transform:uppercase; color:#334155; margin-bottom:3px; }
-  input[type="text"], select{ width:100%; padding:7px 8px; border:1px solid #cbd5e1; border-radius:8px; background:#fff; }
-  .readonly{ background:#f8fafc; }
-  .btn{ border:1px solid #cbd5e1; background:#fff; padding:7px 10px; border-radius:10px; font-weight:700; cursor:pointer; }
-  .btn.primary{ background:#2563eb; color:#fff; border-color:#1e40af; }
-  .center{ display:flex; flex-direction:column; align-items:center; gap:6px; padding-top:28px; }
-  .arrow{ width:36px; height:30px; border:1px solid #cbd5e1; border-radius:8px; background:#fff; font-weight:900; }
-
-  /* RIGHT SIDEBAR (compact) */
-  .rightbar{ display:flex; flex-direction:column; gap:8px; }
-  .rightbar .chip{ padding:6px 10px; border:1px solid var(--stroke); border-radius:999px; background:#fff; font-weight:700; }
-  .rightbar .box{ background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:8px; }
-  .badge{ display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:8px; background:#eef2ff; color:#1e3a8a; font-weight:800; }
-
-  /* TABLES */
-  table{ width:100%; border-collapse:collapse; }
-  thead th{ background:linear-gradient(180deg,var(--grid-header),#3b82f6); color:var(--grid-header-text);
-            text-align:left; padding:8px 10px; font-size:11px; }
-  tbody td{ padding:8px 10px; border-bottom:1px solid #dbeafe; font-size:12px; }
-  tbody tr:nth-child(odd){ background:var(--row-1); } tbody tr:nth-child(even){ background:var(--row-2); }
-  .grid-wrap{ border:1px solid var(--stroke); border-radius:10px; overflow:hidden; }
-  .h-rows{ max-height:240px; overflow:auto; }
-
-  /* FOOTER PANELS */
-  .footer{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
-  .card-title{ padding:8px 10px; background:linear-gradient(180deg,#e0ecff,#d8e7ff); border-bottom:1px solid #cfe0ff; font-weight:800; }
+  :root{--bg:#f6f9ff;--card:#ffffff;--text:#0f2442;--muted:#6d7e96;--primary:#2f7df6;--primary-100:#ecf3ff;--primary-200:#d8e7ff;--stroke:#d9e3f7;--table-head:#f0f6ff}
+  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,Ubuntu,sans-serif}
+  .app{max-width:1240px;margin:auto;padding:20px}header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  h1{font-size:20px;margin:0}.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{background:#fff;color:var(--text);border:1px solid var(--stroke);padding:8px 12px;border-radius:10px;cursor:pointer;transition:.2s}
+  .btn.primary{background:var(--primary);color:#fff;border-color:#0a69e4;font-weight:600}.btn.ghost{background:transparent}
+  .card{background:var(--card);border:1px solid var(--stroke);border-radius:14px;padding:14px;box-shadow:0 6px 16px rgba(5,19,31,.05)}
+  .card h2{font-size:13px;color:#5e7390;letter-spacing:.08em;text-transform:uppercase;margin:0 0 10px}
+  .form-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}label{display:block;font-size:12px;color:#5f7088;margin:0 0 4px}
+  input,select,textarea{width:100%;background:#fbfdff;color:var(--text);border:1px solid var(--stroke);border-radius:10px;padding:9px 10px;outline:none}
+  textarea{min-height:60px;resize:vertical}.col-2{grid-column:span 2}.col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-6{grid-column:span 6}.col-7{grid-column:span 7}.col-8{grid-column:span 8}.col-9{grid-column:span 9}.col-12{grid-column:span 12}
+  .flags{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}.toggle{display:flex;align-items:center}.toggle input{position:absolute;opacity:0;pointer-events:none}
+  .toggle span{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--stroke);border-radius:999px;background:var(--primary-100);color:#304a6a;font-size:12px;transition:.2s}
+  .toggle span::before{content:"";width:14px;height:14px;border-radius:50%;border:1px solid #9fb6d7;background:#fff}
+  .toggle input:checked + span{background:#e1edff;border-color:#b8cff6;box-shadow:0 0 0 2px #e9f2ff inset}.toggle input:checked + span::before{background:var(--primary);border-color:var(--primary)}
+  .flags-note{margin-top:8px;color:#6d7e96;font-size:12px}.table-wrap{overflow:auto;border:1px solid var(--stroke);border-radius:12px;background:#fff}
+  table{width:100%;border-collapse:collapse;min-width:900px}th,td{padding:10px 12px;border-bottom:1px solid var(--stroke);text-align:left;white-space:nowrap}
+  th{font-size:12px;color:#527099;text-transform:uppercase;letter-spacing:.08em;background:var(--table-head);position:sticky;top:0}tfoot td{background:var(--table-head);font-weight:600}
+  .right{text-align:right}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.spacer{height:10px}
+  .tabs{display:flex;gap:6px;margin:8px 0 0;flex-wrap:wrap}.tab{padding:10px 12px;border:1px solid var(--stroke);border-bottom:0;border-radius:10px 10px 0 0;background:#dfeaff;color:#35507a;cursor:pointer;user-select:none}
+  .tab.active{background:#fff;color:#0f2442;font-weight:600;border-color:var(--stroke)}.tabpanels{border:1px solid var(--stroke);border-radius:0 12px 12px 12px;background:#fff}
+  .tabpanel{display:none;padding:14px}.tabpanel.active{display:block}.placeholder{padding:14px;border:1px dashed var(--stroke);border-radius:10px;color:#6d7e96;background:#fbfdff}
 </style>
 </head>
 <body>
-  <div class="titlebar">Cadastros</div>
-  <div class="wrap">
-    <div class="window">
+<div class="app">
+  <header>
+    <h1>Captação</h1>
+    <div class="actions">
+      <button class="btn ghost">Ajuda</button><button class="btn">Validar</button><button class="btn">Salvar</button><button class="btn">Salvar &amp; Continuar</button><button class="btn">Exportar</button><button class="btn primary">Enviar</button>
+    </div>
+  </header>
 
-      <!-- TOP: VIAGENS LOGCOMEX / « + Associar / VIAGENS DTE / Rightbar -->
-      <div class="split">
-        <!-- VIAGENS LOGCOMEX -->
-        <div class="card">
-          <div class="card-header">VIAGENS LOGCOMEX</div>
-          <div class="fields">
-            <div class="full">
-              <label>Nome Navio</label>
-              <input class="readonly" type="text" value="MSC ELLEN">
-            </div>
-            <div>
-              <label>Viagem Armador</label>
-              <input class="readonly" type="text" value="LUX-50R">
-            </div>
-            <div>
-              <label>Data Operação</label>
-              <input class="readonly" type="text" value="10/10/2025">
-            </div>
-            <div>
-              <label>Nº Atracação</label>
-              <input class="readonly" type="text" value="04577/2025">
-            </div>
-            <div>
-              <label>Term.</label>
-              <input type="text" value="">
-            </div>
-            <div style="display:flex; align-items:flex-end; justify-content:flex-end;">
-              <button class="btn">Importar Planilha</button>
-            </div>
-          </div>
+  <div class="card">
+    <h2>Dados do BL</h2>
+    <div class="form-grid">
+      <div class="col-2"><label>Lote</label><input></div><div class="col-2"><label>Viagem</label><input></div><div class="col-4"><label>Navio</label><input></div><div class="col-4"><label>BL</label><input></div>
+      <div class="col-2"><label>Dt. Emissão</label><input placeholder="DD/MM/AAAA"></div><div class="col-3"><label>Porto Origem</label><input></div><div class="col-3"><label>Porto Destino</label><input></div><div class="col-4"><label>Armador</label><input></div>
+      <div class="col-6"><label>Importador</label><input></div><div class="col-3"><label>Despachante</label><input></div><div class="col-3"><label>Captador</label><input></div>
+      <div class="col-3"><label>País</label><input></div><div class="col-3"><label>Obs. RPS</label><input></div><div class="col-3"><label>CE Mercante / RUC</label><input></div><div class="col-3"><label>Volume (m³)</label><input></div>
+      <div class="col-3"><label>Grau</label><select><option>Master</option><option>House</option></select></div><div class="col-3"><label>Vinculado</label><select><option>Todos</option><option>Não</option></select></div><div class="col-3"><label>Terminal</label><select><option>EUD-1</option></select></div><div class="col-3"><label>Transporte</label><select><option>Marítimo</option><option>Rodoviário</option><option>Ferroviário</option><option>Aéreo</option></select></div>
+      <div class="col-12"><label>Observações</label><textarea></textarea></div>
+    </div>
+    <div class="spacer"></div><div class="row"><button class="btn">Frete</button><button class="btn">Lista de Desdobro ANVISA</button><button class="btn">Abrir Logcomex</button></div>
+  </div>
+
+  <div class="card" id="marcas">
+    <h2>Marcas do Processo</h2>
+    <div class="flags">
+      <label class="toggle"><input type="checkbox"><span>MIC-DTA</span></label><label class="toggle"><input type="checkbox"><span>ANVISA</span></label><label class="toggle"><input type="checkbox"><span>HubPort</span></label><label class="toggle"><input type="checkbox"><span>Carga Pátio</span></label><label class="toggle"><input type="checkbox"><span>DTA</span></label><label class="toggle"><input type="checkbox"><span>Escolta?</span></label><label class="toggle"><input type="checkbox"><span>Entreposto Aduaneiro</span></label><label class="toggle"><input type="checkbox"><span>Redestinação</span></label><label class="toggle"><input type="checkbox"><span>Carga Estrangeira</span></label><label class="toggle"><input type="checkbox"><span>Consolidada</span></label><label class="toggle"><input type="checkbox"><span>FCA</span></label>
+    </div>
+    <div class="flags-note">Selecione apenas as marcas aplicáveis a este BL.</div>
+  </div>
+
+  <div class="card">
+    <h2>Cargas</h2>
+    <div class="tabs" role="tablist" aria-label="Abas de Carga">
+      <div class="tab active" role="tab" aria-selected="true" data-target="#tab-ctn">Contêineres</div>
+      <div class="tab" role="tab" aria-selected="false" data-target="#tab-cc">Carga Conteinerizada</div>
+      <div class="tab" role="tab" aria-selected="false" data-target="#tab-cs">Carga Solta</div>
+      <div class="tab" role="tab" aria-selected="false" data-target="#tab-tf">Tabela de Faturamento</div>
+      <div class="tab" role="tab" aria-selected="false" data-target="#tab-dc">Descrição de Carga BL</div>
+    </div>
+    <div class="tabpanels">
+      <section id="tab-ctn" class="tabpanel active" role="tabpanel">
+        <div class="form-grid">
+          <div class="col-3"><label>Sigla Contêiner</label><input></div><div class="col-2"><label>Tamanho</label><select><option>20'</option><option>40'</option><option>45'</option></select></div><div class="col-2"><label>Tipo</label><input></div><div class="col-2"><label>IMO</label><input></div><div class="col-3"><label>UNDG</label><input></div>
+          <div class="col-3"><label>Tara (kg)</label><input></div><div class="col-3"><label>Peso Bruto (kg)</label><input></div><div class="col-3"><label>Status</label><select><option>Cheio</option><option>Vazio</option></select></div><div class="col-3"><label>Temperatura (Reefer)</label><input></div>
+          <div class="col-12"><label>Observações</label><input></div>
         </div>
-
-        <!-- Centro: setas + Associar -->
-        <div class="center">
-          <button class="arrow">&laquo;</button>
-          <button class="btn primary">Associar</button>
+        <div class="spacer"></div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Sigla</th><th>Tamanho</th><th>Tipo</th><th>IMO</th><th>UNDG</th><th class="right">Tara (kg)</th><th class="right">P. Bruto (kg)</th><th>Status</th><th>Temperatura</th><th>Observações</th></tr></thead>
+          <tbody><tr><td>JXLU 615059-0</td><td>40'</td><td>DRY</td><td></td><td></td><td class="right">3.800</td><td class="right">17.073</td><td>Cheio</td><td></td><td>—</td></tr></tbody></table>
         </div>
+      </section>
 
-        <!-- VIAGENS DTE -->
-        <div class="card">
-          <div class="card-header">VIAGENS DTE</div>
-          <div class="fields">
-            <div class="full">
-              <label>Nome Navio</label>
-              <input class="readonly" type="text" value="MSC ELLEN">
-            </div>
-            <div>
-              <label>Navio</label>
-              <input type="text" value="">
-            </div>
-            <div>
-              <label>Lloyd</label>
-              <input class="readonly" type="text" value="9166780">
-            </div>
-            <div>
-              <label>Grupo Atrac.</label>
-              <input type="text" value="">
-            </div>
-            <div>
-              <label>Nº Atracação</label>
-              <input class="readonly" type="text" value="04577/2025">
-            </div>
-            <div style="display:flex; align-items:flex-end; justify-content:flex-end;">
-              <button class="btn">Importar Bls</button>
-            </div>
-          </div>
+      <section id="tab-cc" class="tabpanel" role="tabpanel">
+        <div class="form-grid">
+          <div class="col-2"><label>Item</label><input></div><div class="col-2"><label>Tipo</label><input></div><div class="col-2"><label>Embalagem</label><input></div><div class="col-6"><label>Descrição</label><input></div>
+          <div class="col-3"><label>Marca</label><input></div><div class="col-3"><label>Descrição - SIGVIG</label><input></div><div class="col-3"><label>NCM</label><input></div><div class="col-3"><label>Artigo</label><input></div>
+          <div class="col-3"><label>Peso Bruto</label><input></div><div class="col-3"><label>Sigla Contêiner</label><input></div><div class="col-3"><label>Capacidade (%)</label><input></div><div class="col-3"><label>Volume (m³) Demais Itens</label><input></div>
+          <div class="col-12"><label>Obs. do Item</label><input></div>
         </div>
-
-        <!-- Right sidebar (compact) -->
-        <div class="rightbar">
-          <div style="display:flex; gap:6px; align-items:center; justify-content:space-between;">
-            <span class="rightbar chip">EJO</span>
-            <span class="rightbar chip">Pátio</span>
-            <button class="btn">Sair</button>
-          </div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <label>Porto</label>
-            <select style="padding:7px 8px; border:1px solid #cbd5e1; border-radius:8px;"><option>EUD1 - SA4</option></select>
-          </div>
-          <div class="box">
-            <div style="font-weight:800; margin-bottom:4px;">Navios</div>
-            <label style="display:flex; gap:6px; align-items:center; font-size:12px;"><input type="radio" name="navios" checked> Todos</label>
-            <label style="display:flex; gap:6px; align-items:center; font-size:12px;"><input type="radio" name="navios"> SGIPA</label>
-          </div>
-          <button class="btn">Importar BLs</button>
-          <button class="btn">Parâmetros - Clientes</button>
-          <button class="btn">Importar Planilha</button>
-          <button class="btn">Adiciona Consulta CE</button>
-          <button class="btn">Monitoramento • Consulta CE</button>
-          <div style="display:flex; justify-content:flex-end;"><span class="badge">2</span></div>
+        <div class="spacer"></div>
+        <div class="table-wrap">
+          <table><thead><tr><th>#</th><th>Item</th><th>Descrição</th><th>Marca</th><th>Notas</th><th>IMO</th><th>UNDG</th><th class="right">P.Bruto</th><th>Sigla</th><th class="right">Capacidade (%)</th><th class="right">Volume (m³)</th></tr></thead>
+          <tbody><tr><td>1</td><td>359</td><td>Sobrettudos, japonesas, gabões, capas...</td><td>ABN INTERNATIONAL</td><td>ARTIGOS DE VESTUÁRIO</td><td></td><td></td><td class="right">17.073,45</td><td>JXLU 615059-0</td><td class="right">76,4</td><td class="right"></td></tr></tbody>
+          <tfoot><tr><td colspan="7">Media CNTR. • Peso CNTR. • Qtde. Total • Peso Total</td><td class="right">17.073,45</td><td></td><td class="right">—</td><td class="right">—</td></tr></tfoot></table>
         </div>
-      </div>
+      </section>
 
-      <!-- MIDDLE: BLs grid -->
-      <div class="card" style="margin-top:10px;">
-        <div class="card-title">Conhecimentos (BLs)</div>
-        <div class="grid-wrap h-rows">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:90px;">Indicador</th>
-                <th style="width:160px;">BL</th>
-                <th style="width:70px;">Lote</th>
-                <th style="width:120px;">Data Emissão</th>
-                <th style="width:220px;">Armador</th>
-                <th style="width:140px;">Porto Origem</th>
-                <th style="width:220px;">M.Consignatário</th>
-                <th style="width:120px;">CE</th>
-                <th style="width:110px;">Consulta CE</th>
-                <th style="width:100px;">Usuário</th>
-                <th style="width:90px;">Qtde HBL</th>
-                <th style="width:160px;">HBL</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="text-align:center;">■</td>
-                <td>MEDUXK686211</td>
-                <td>0</td>
-                <td>—</td>
-                <td>MSC MEDITERRANEAN SHIPPING CO</td>
-                <td>TIANJINXINGANG</td>
-                <td>INTERX LOGISTICS LTDA.</td>
-                <td>1530052995656542</td>
-                <td style="text-align:center;"><input type="checkbox" checked></td>
-                <td style="text-align:center;">1</td>
-                <td style="text-align:center;">1</td>
-                <td>SHYY2508111</td>
-              </tr>
-              <tr>
-                <td style="text-align:center;">■</td>
-                <td>MEDUJY361516</td>
-                <td>0</td>
-                <td>—</td>
-                <td>MSC MEDITERRANEAN SHIPPING CO</td>
-                <td>TSINGTAO</td>
-                <td>SOUTH CARGO DO BRASIL TRANSPORTES</td>
-                <td>1525052996592515</td>
-                <td style="text-align:center;"><input type="checkbox"></td>
-                <td style="text-align:center;">0</td>
-                <td style="text-align:center;">1</td>
-                <td>QDOS032059</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- BOTTOM: Containers & Carga Solta -->
-      <div class="footer">
-        <div class="card">
-          <div class="card-title">Containers</div>
-          <div class="grid-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th style="width:160px;">BL</th>
-                  <th style="width:160px;">Container</th>
-                  <th style="width:70px;">Tam.</th>
-                  <th style="width:90px;">Tipo</th>
-                  <th style="width:100px;">Tara(kg)</th>
-                  <th style="width:120px;">P. Bruto(kg)</th>
-                  <th style="width:90px;">Qtde. CC</th>
-                  <th style="width:140px;">Embalagem CC</th>
-                  <th>Descr. SIG</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>MEDUXK686211</td>
-                  <td>FFAU2917879</td>
-                  <td>40</td>
-                  <td>HIGH CUBE</td>
-                  <td>0</td>
-                  <td>0</td>
-                  <td>0</td>
-                  <td>—</td>
-                  <td>—</td>
-                </tr>
-                <tr>
-                  <td>MEDUXK686211</td>
-                  <td>MSMU8528045-0</td>
-                  <td>40</td>
-                  <td>HIGH CUBE</td>
-                  <td>0</td>
-                  <td>0</td>
-                  <td>0</td>
-                  <td>—</td>
-                  <td>—</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Carga Solta</div>
-          <div class="grid-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th style="width:160px;">BL</th>
-                  <th style="width:80px;">IPA</th>
-                  <th style="width:80px;">Qtde</th>
-                  <th style="width:160px;">Item</th>
-                  <th style="width:140px;">Embalagem</th>
-                  <th style="width:120px;">P. Bruto(kg)</th>
-                  <th style="width:80px;">m³</th>
-                  <th>Marca</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td colspan="8" style="text-align:center; padding:28px; color:#64748b;">Itens 0</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
+      <section id="tab-cs" class="tabpanel" role="tabpanel"><div class="placeholder">Aba "Carga Solta" pronta para receber os campos do seu formulário original.</div></section>
+      <section id="tab-tf" class="tabpanel" role="tabpanel"><div class="placeholder">Aba "Tabela de Faturamento" para estrutura tarifária e regras.</div></section>
+      <section id="tab-dc" class="tabpanel" role="tabpanel"><div class="placeholder">Aba "Descrição de Carga BL" para texto consolidado.</div></section>
     </div>
   </div>
+
+  <div class="card">
+    <h2>Lotes</h2>
+    <div class="table-wrap">
+      <table><thead><tr><th>Lote</th><th>Núm. BL</th><th>Porto Origem</th><th>Porto Destino</th><th>Armador</th><th>Importador</th><th>Despachante</th><th>Captador</th></tr></thead>
+      <tbody><tr><td>3097905</td><td>ZIMXLIAS0510422</td><td>XIAMEN</td><td>HO CHI MINH CTY</td><td>ZIM INTEGRATED SHIPPING</td><td>ABN COMERCIAL IMPORTADORA E EXPORTADORA</td><td>PGL BRASIL LTDA</td><td>PGL BRASIL LTDA</td></tr>
+      <tr><td>3097906</td><td>ZIMXLIAS110622</td><td>XIAMEN</td><td>HO CHI MINH CTY</td><td>ZIM INTEGRATED SHIPPING</td><td>ARO-PLASTICO</td><td>ATC ASSESSORIA TÉCNICA</td><td>TRIUNFO COMEX</td></tr></tbody></table>
+    </div>
+    <div class="spacer"></div>
+    <div class="row"><button class="btn">Novo</button><button class="btn">Editar</button><button class="btn">Excluir</button><button class="btn">Duplicar</button><button class="btn">Anexos</button><button class="btn">Transbordo</button></div>
+  </div>
+
+  <p style="color:#5e7390;font-size:12px">Versão Light v4 — inclui a aba “Contêineres” antes de “Carga Conteinerizada”.</p>
+</div>
+
+<script>
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    const tgt=document.querySelector(tab.dataset.target);
+    if(tgt) tgt.classList.add('active');
+  });
+});
+</script>
 </body>
 </html>
