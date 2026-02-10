@@ -2,208 +2,281 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Cadastros – Viagens / Atracação (grid menor + Logcomex)</title>
+<title>Cadastros – Importação de Dados Logcomex • Captação (Topo Compacto + restante)</title>
 <style>
   :root{
-    --bg:#f8fafc; --panel:#ffffff; --stroke:#dbe3ef; --text:#0f172a;
+    --bg:#f7fafc; --panel:#ffffff; --panel-2:#f1f5f9; --stroke:#d8e1ee;
+    --text:#0f172a; --muted:#475569; --cyan:#06b6d4; --blue:#2563eb; --blue-dark:#1e40af;
     --grid-header:#1d4ed8; --grid-header-text:#f8fafc; --row-1:#eef6ff; --row-2:#e7f3ff;
-    --blue:#2563eb; --blue-dark:#1e40af;
   }
   *{ box-sizing:border-box; }
-  body{ margin:0; background:var(--bg); color:var(--text); font:12px/1.25 "Inter","Segoe UI",Arial,sans-serif; }
-  .titlebar{ background:#e5eaf2; border-bottom:1px solid var(--stroke); padding:6px 10px; font-size:11px; font-weight:800; }
-  .window{ padding:10px; }
-  .panel{ background:var(--panel); border:1px solid var(--stroke); border-radius:10px; box-shadow:0 2px 10px rgba(2,8,23,.05); padding:10px; }
-  .grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
-  .grid-2{ display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
-  label{ font-size:10px; text-transform:uppercase; color:#0f172a; opacity:.8; letter-spacing:.3px; }
-  input[type="text"], select{ width:100%; padding:6px 8px; border:1px solid #cfd7e4; border-radius:6px; background:#fff; color:var(--text); }
-  .box{ background:#ffffff; border:1px solid #e6ecf5; padding:8px; border-radius:8px; }
-  .box h5{ margin:0 0 6px; font-size:11px; color:#334155; text-transform:uppercase; letter-spacing:.25px; }
-  .bar{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
-  .btn{ background:#ffffff; border:1px solid #cfd7e4; padding:6px 10px; border-radius:999px; font-weight:700; color:#0f172a; box-shadow:0 1px 6px rgba(2,8,23,.05); cursor:pointer; font-size:11px; display:inline-flex; align-items:center; gap:6px; }
-  .btn.primary{ background:var(--blue); border-color:var(--blue-dark); color:#ffffff; }
-  .btn.refresh{ background:#ecf2ff; border-color:#c7d2fe; color:#1e3a8a; }
-  .btn svg{ width:14px; height:14px; }
-  table{ width:100%; border-collapse:collapse; margin-top:8px; }
-  thead th{ background:linear-gradient(180deg,var(--grid-header),#3b82f6); color:var(--grid-header-text); text-align:left; padding:7px 8px; font-size:11px; position:sticky; top:0; }
-  tbody td{ padding:6px 8px; border-bottom:1px solid #e7effb; font-size:11px; }
-  tbody tr:nth-child(odd){ background:var(--row-1); }
-  tbody tr:nth-child(even){ background:var(--row-2); }
-  .grid-wrap{ max-height:220px; overflow:auto; border:1px solid #e7effb; border-radius:8px; }
+  body{ margin:0; background:linear-gradient(180deg,var(--bg),#fff 55%); color:var(--text);
+        font:12px/1.3 "Inter","Segoe UI",Helvetica,Arial,sans-serif;}
+  .titlebar{ background:#e2e8f0; border-bottom:1px solid var(--stroke); padding:8px 12px; font-weight:900; }
+  .wrap{ padding:10px; }
+  .window{ background:var(--panel); border:1px solid var(--stroke); border-radius:12px; padding:10px; box-shadow:0 2px 12px rgba(2,8,23,.06); }
+
+  /* TOP SPLIT (compact) */
+  .split{ display:grid; grid-template-columns: 1fr 64px 1fr 260px; gap:8px; align-items:start; }
+  .card{ background:var(--panel-2); border:1px solid var(--stroke); border-radius:10px; overflow:hidden; }
+  .card-header{ padding:8px 10px; background:linear-gradient(180deg,#e0ecff,#d8e7ff); border-bottom:1px solid #cfe0ff; font-weight:800; }
+  .fields{ display:grid; grid-template-columns:repeat(2, minmax(160px,1fr)); gap:8px; padding:8px 10px; }
+  .fields .full{ grid-column:span 2; }
+  label{ display:block; font-size:10px; text-transform:uppercase; color:#334155; margin-bottom:3px; }
+  input[type="text"], select{ width:100%; padding:7px 8px; border:1px solid #cbd5e1; border-radius:8px; background:#fff; }
+  .readonly{ background:#f8fafc; }
+  .btn{ border:1px solid #cbd5e1; background:#fff; padding:7px 10px; border-radius:10px; font-weight:700; cursor:pointer; }
+  .btn.primary{ background:#2563eb; color:#fff; border-color:#1e40af; }
+  .center{ display:flex; flex-direction:column; align-items:center; gap:6px; padding-top:28px; }
+  .arrow{ width:36px; height:30px; border:1px solid #cbd5e1; border-radius:8px; background:#fff; font-weight:900; }
+
+  /* RIGHT SIDEBAR (compact) */
+  .rightbar{ display:flex; flex-direction:column; gap:8px; }
+  .rightbar .chip{ padding:6px 10px; border:1px solid var(--stroke); border-radius:999px; background:#fff; font-weight:700; }
+  .rightbar .box{ background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:8px; }
+  .badge{ display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:8px; background:#eef2ff; color:#1e3a8a; font-weight:800; }
+
+  /* TABLES */
+  table{ width:100%; border-collapse:collapse; }
+  thead th{ background:linear-gradient(180deg,var(--grid-header),#3b82f6); color:var(--grid-header-text);
+            text-align:left; padding:8px 10px; font-size:11px; }
+  tbody td{ padding:8px 10px; border-bottom:1px solid #dbeafe; font-size:12px; }
+  tbody tr:nth-child(odd){ background:var(--row-1); } tbody tr:nth-child(even){ background:var(--row-2); }
+  .grid-wrap{ border:1px solid var(--stroke); border-radius:10px; overflow:hidden; }
+  .h-rows{ max-height:240px; overflow:auto; }
+
+  /* FOOTER PANELS */
+  .footer{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+  .card-title{ padding:8px 10px; background:linear-gradient(180deg,#e0ecff,#d8e7ff); border-bottom:1px solid #cfe0ff; font-weight:800; }
 </style>
 </head>
 <body>
   <div class="titlebar">Cadastros</div>
-  <div class="window panel">
-    <!-- Campos superiores solicitados -->
-    <div class="panel" style="margin-bottom:8px; padding:8px;">
-      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px;">
-        <div><label>Nº Viagem</label><input type="text" value="04681/2025"></div>
-        <div><label>Cód. Navio</label><input type="text" value=""></div>
-        <div><label>Nome Navio</label><input type="text" value="MAERSK SAN VINCENT"></div>
-        <div><label>Data Chegada</label><input type="text" value=""></div>
-        <div><label>Hora Chegada</label><input type="text" value=""></div>
-        <div><label>Início</label><input type="text" value=""></div>
-        <div><label>Fim</label><input type="text" value=""></div>
-        <div><label>Atracação</label><input type="text" value=""></div>
-      </div>
-    </div>
+  <div class="wrap">
+    <div class="window">
 
+      <!-- TOP: VIAGENS LOGCOMEX / « + Associar / VIAGENS DTE / Rightbar -->
+      <div class="split">
+        <!-- VIAGENS LOGCOMEX -->
+        <div class="card">
+          <div class="card-header">VIAGENS LOGCOMEX</div>
+          <div class="fields">
+            <div class="full">
+              <label>Nome Navio</label>
+              <input class="readonly" type="text" value="MSC ELLEN">
+            </div>
+            <div>
+              <label>Viagem Armador</label>
+              <input class="readonly" type="text" value="LUX-50R">
+            </div>
+            <div>
+              <label>Data Operação</label>
+              <input class="readonly" type="text" value="10/10/2025">
+            </div>
+            <div>
+              <label>Nº Atracação</label>
+              <input class="readonly" type="text" value="04577/2025">
+            </div>
+            <div>
+              <label>Term.</label>
+              <input type="text" value="">
+            </div>
+            <div style="display:flex; align-items:flex-end; justify-content:flex-end;">
+              <button class="btn">Importar Planilha</button>
+            </div>
+          </div>
+        </div>
 
-    <div class="grid-3">
-      <div class="box">
-        <h5>Tipo de Escala</h5>
-        <label><input type="radio" name="esc" checked> Normal</label>
-        <label><input type="radio" name="esc"> Cancelada</label>
-        <label><input type="radio" name="esc"> Com Erro de Cadastramento</label>
-        <label><input type="radio" name="esc"> Embarque</label>
-        <label><input type="radio" name="esc"> Descarga</label>
-        <label><input type="radio" name="esc"> Passagem</label>
-        <label><input type="radio" name="esc"> Descarga de CNTR vazio</label>
+        <!-- Centro: setas + Associar -->
+        <div class="center">
+          <button class="arrow">&laquo;</button>
+          <button class="btn primary">Associar</button>
+        </div>
+
+        <!-- VIAGENS DTE -->
+        <div class="card">
+          <div class="card-header">VIAGENS DTE</div>
+          <div class="fields">
+            <div class="full">
+              <label>Nome Navio</label>
+              <input class="readonly" type="text" value="MSC ELLEN">
+            </div>
+            <div>
+              <label>Navio</label>
+              <input type="text" value="">
+            </div>
+            <div>
+              <label>Lloyd</label>
+              <input class="readonly" type="text" value="9166780">
+            </div>
+            <div>
+              <label>Grupo Atrac.</label>
+              <input type="text" value="">
+            </div>
+            <div>
+              <label>Nº Atracação</label>
+              <input class="readonly" type="text" value="04577/2025">
+            </div>
+            <div style="display:flex; align-items:flex-end; justify-content:flex-end;">
+              <button class="btn">Importar Bls</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right sidebar (compact) -->
+        <div class="rightbar">
+          <div style="display:flex; gap:6px; align-items:center; justify-content:space-between;">
+            <span class="rightbar chip">EJO</span>
+            <span class="rightbar chip">Pátio</span>
+            <button class="btn">Sair</button>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <label>Porto</label>
+            <select style="padding:7px 8px; border:1px solid #cbd5e1; border-radius:8px;"><option>EUD1 - SA4</option></select>
+          </div>
+          <div class="box">
+            <div style="font-weight:800; margin-bottom:4px;">Navios</div>
+            <label style="display:flex; gap:6px; align-items:center; font-size:12px;"><input type="radio" name="navios" checked> Todos</label>
+            <label style="display:flex; gap:6px; align-items:center; font-size:12px;"><input type="radio" name="navios"> SGIPA</label>
+          </div>
+          <button class="btn">Importar BLs</button>
+          <button class="btn">Parâmetros - Clientes</button>
+          <button class="btn">Importar Planilha</button>
+          <button class="btn">Adiciona Consulta CE</button>
+          <button class="btn">Monitoramento • Consulta CE</button>
+          <div style="display:flex; justify-content:flex-end;"><span class="badge">2</span></div>
+        </div>
       </div>
-      <div class="box">
-        <h5>Previsão de Atracação</h5>
-        <div class="grid-2">
-          <div><label>Armazém</label><input type="text"></div>
-          <div class="grid-2">
-            <div><label>Data</label><input type="text"></div>
-            <div><label>Hora</label><input type="text"></div>
+
+      <!-- MIDDLE: BLs grid -->
+      <div class="card" style="margin-top:10px;">
+        <div class="card-title">Conhecimentos (BLs)</div>
+        <div class="grid-wrap h-rows">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:90px;">Indicador</th>
+                <th style="width:160px;">BL</th>
+                <th style="width:70px;">Lote</th>
+                <th style="width:120px;">Data Emissão</th>
+                <th style="width:220px;">Armador</th>
+                <th style="width:140px;">Porto Origem</th>
+                <th style="width:220px;">M.Consignatário</th>
+                <th style="width:120px;">CE</th>
+                <th style="width:110px;">Consulta CE</th>
+                <th style="width:100px;">Usuário</th>
+                <th style="width:90px;">Qtde HBL</th>
+                <th style="width:160px;">HBL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:center;">■</td>
+                <td>MEDUXK686211</td>
+                <td>0</td>
+                <td>—</td>
+                <td>MSC MEDITERRANEAN SHIPPING CO</td>
+                <td>TIANJINXINGANG</td>
+                <td>INTERX LOGISTICS LTDA.</td>
+                <td>1530052995656542</td>
+                <td style="text-align:center;"><input type="checkbox" checked></td>
+                <td style="text-align:center;">1</td>
+                <td style="text-align:center;">1</td>
+                <td>SHYY2508111</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">■</td>
+                <td>MEDUJY361516</td>
+                <td>0</td>
+                <td>—</td>
+                <td>MSC MEDITERRANEAN SHIPPING CO</td>
+                <td>TSINGTAO</td>
+                <td>SOUTH CARGO DO BRASIL TRANSPORTES</td>
+                <td>1525052996592515</td>
+                <td style="text-align:center;"><input type="checkbox"></td>
+                <td style="text-align:center;">0</td>
+                <td style="text-align:center;">1</td>
+                <td>QDOS032059</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BOTTOM: Containers & Carga Solta -->
+      <div class="footer">
+        <div class="card">
+          <div class="card-title">Containers</div>
+          <div class="grid-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:160px;">BL</th>
+                  <th style="width:160px;">Container</th>
+                  <th style="width:70px;">Tam.</th>
+                  <th style="width:90px;">Tipo</th>
+                  <th style="width:100px;">Tara(kg)</th>
+                  <th style="width:120px;">P. Bruto(kg)</th>
+                  <th style="width:90px;">Qtde. CC</th>
+                  <th style="width:140px;">Embalagem CC</th>
+                  <th>Descr. SIG</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>MEDUXK686211</td>
+                  <td>FFAU2917879</td>
+                  <td>40</td>
+                  <td>HIGH CUBE</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>—</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>MEDUXK686211</td>
+                  <td>MSMU8528045-0</td>
+                  <td>40</td>
+                  <td>HIGH CUBE</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>—</td>
+                  <td>—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Carga Solta</div>
+          <div class="grid-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:160px;">BL</th>
+                  <th style="width:80px;">IPA</th>
+                  <th style="width:80px;">Qtde</th>
+                  <th style="width:160px;">Item</th>
+                  <th style="width:140px;">Embalagem</th>
+                  <th style="width:120px;">P. Bruto(kg)</th>
+                  <th style="width:80px;">m³</th>
+                  <th>Marca</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="8" style="text-align:center; padding:28px; color:#64748b;">Itens 0</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-      <div class="box">
-        <h5>Atracação Efetiva</h5>
-        <div class="grid-2">
-          <div><label>Armazém</label><input type="text"></div>
-          <div class="grid-2">
-            <div><label>Data</label><input type="text"></div>
-            <div><label>Hora</label><input type="text"></div>
-          </div>
-        </div>
-        <div class="bar" style="margin-top:6px;">
-          <button class="btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3v6h6" stroke-width="2"/><path d="M3 12a9 9 0 1 0 3-6.7" stroke-width="2"/></svg>
-            Atracar
-          </button>
-          <button class="btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 21v-6h-6" stroke-width="2"/><path d="M21 12a9 9 0 1 1-3-6.7" stroke-width="2"/></svg>
-            Desatracar
-          </button>
-          <button class="btn">Editar</button>
-          <button class="btn">Salvar</button>
-        </div>
-      </div>
-    </div>
 
-    <div class="grid-3" style="margin-top:6px;">
-      <div class="box">
-        <h5>Viagens</h5>
-        <label><input type="radio" name="viag" checked> Todas</label>
-        <label><input type="radio" name="viag"> Com Captação</label>
-        <label><input type="radio" name="viag"> Com Sol. Transfer.</label>
-        <label><input type="radio" name="viag"> C/ DT</label>
-        <label><input type="radio" name="viag"> Sem Sol. Transfer.</label>
-      </div>
-      <div class="box">
-        <h5>Atracação</h5>
-        <label><input type="radio" name="atr" checked> Prevista</label>
-        <label><input type="radio" name="atr"> Efetiva</label>
-        <h5 style="margin-top:6px;">Ordem</h5>
-        <label><input type="radio" name="ord" checked> Viagem</label>
-        <label><input type="radio" name="ord"> Data Chegada</label>
-        <label><input type="radio" name="ord"> Navio</label>
-      </div>
-      <div class="box">
-        <h5>Campos</h5>
-        <div class="grid-2">
-          <div><label>Viagem</label><input type="text"></div>
-          <div><label>Armazém</label><input type="text"></div>
-          <div><label>Data Inicial</label><input type="text"></div>
-          <div><label>Navio</label><input type="text" value="MAERSK SAN VINCENT"></div>
-        </div>
-        <div class="bar" style="margin-top:6px;">
-          <button class="btn">Registros (3)</button>
-          <label style="display:inline-flex; align-items:center; gap:6px; font-size:11px;"><input type="checkbox" checked> Refresh Automático</label>
-          <button class="btn primary">Consultar</button>
-          <button class="btn">Importa CE</button>
-          <button class="btn">Entrega Op. Port.</button>
-          <button class="btn">Cntrs Externos</button>
-          <!-- Logcomex "refresh-style" button -->
-          <button class="btn refresh" title="Enviar/alimentar plataforma Logcomex">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4v6h6" stroke-width="2"/><path d="M20 20v-6h-6" stroke-width="2"/><path d="M20 10a8 8 0 1 0-8 8" stroke-width="2"/></svg>
-            Enviar p/ Logcomex
-          </button>
-        </div>
-      </div>
     </div>
-
-    <div class="grid-wrap" style="margin-top:6px;">
-      <table>
-        <thead>
-          <tr>
-            <th style="width:110px;">Viagem</th>
-            <th>Navio</th>
-            <th style="width:180px;">Chegada (Data/Hora)</th>
-            <th style="width:110px;">Armazém</th>
-            <th style="width:110px;">Captação</th>
-            <th style="width:150px;">Sol. Transf.</th>
-            <th style="width:70px;">DT</th>
-            <th style="width:110px;">Manifesto</th>
-            <th style="width:160px;">Recinto Alfandegado</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>04681/2025</td>
-            <td>MAERSK SAN VINCENT</td>
-            <td>12/10/2025 / 00:00:00</td>
-            <td>—</td>
-            <td style="text-align:center;"><input type="checkbox" checked></td>
-            <td style="text-align:center;"><input type="checkbox"></td>
-            <td style="text-align:center;"><input type="checkbox"></td>
-            <td style="text-align:center;"><input type="checkbox"></td>
-            <td>EUDMARCO</td>
-          </tr>
-          <tr>
-            <td>03941/2025</td>
-            <td>MAERSK SAN VINCENT</td>
-            <td>29/07/2025 / 00:00:00</td>
-            <td>EPORT 1</td>
-            <td style="text-align:center;"><input type="checkbox"></td>
-            <td style="text-align:center;"><input type="checkbox" checked></td>
-            <td style="text-align:center;"><input type="checkbox"></td>
-            <td style="text-align:center;"><input type="checkbox"></td>
-            <td>EUDMARCO</td>
-          </tr>
-          <tr>
-            <td>03103/2025</td>
-            <td>MAERSK SAN VINCENT</td>
-            <td>13/07/2025 / 00:00:00</td>
-            <td>EPORT 1</td>
-            <td style="text-align:center;"><input type="checkbox"></td>
-            <td style="text-align:center;"><input type="checkbox"></td>
-            <td style="text-align:center;"><input type="checkbox" checked></td>
-            <td style="text-align:center;"><input type="checkbox" checked></td>
-            <td>EUDMARCO</td>
-          </tr>
-          <tr>
-            <td>02871/2025</td>
-            <td>MSC LOUISE</td>
-            <td>07/07/2025 / 06:00:00</td>
-            <td>BERTH 3</td>
-            <td style="text-align:center;"><input type="checkbox"></td>
-            <td style="text-align:center;"><input type="checkbox"></td>
-            <td style="text-align:center;"><input type="checkbox"></td>
-            <td style="text-align:center;"><input type="checkbox"></td>
-            <td>TERMINAL X</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
   </div>
 </body>
 </html>
