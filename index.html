@@ -1,156 +1,219 @@
-
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Cadastros – Solicitação de Transferência / Fechamento da DT</title>
+<!-- saved from url=(0082)file:///C:/Users/HxTos/Desktop/Processo%20de%20%20Capta%C3%A7%C3%A3o/siscomex.html -->
+<html lang="pt-br"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HXtos CY • Consulta CE (Siscomex)</title>
+
 <style>
-  :root{
-    --bg:#f7fafc; --panel:#ffffff; --panel-2:#f1f5f9; --stroke:#d8e1ee;
-    --text:#0f172a; --muted:#475569; --cyan:#06b6d4; --blue:#2563eb;
-    --grid-header:#1d4ed8; --grid-header-text:#f8fafc; --row-1:#eef6ff; --row-2:#e7f3ff;
-  }
-  *{ box-sizing:border-box; }
-  body{ margin:0; background:linear-gradient(180deg,var(--bg),#fff 55%); color:var(--text);
-        font:13px/1.35 "Inter","Segoe UI",Helvetica,Arial,sans-serif;}
-  .titlebar{ background:#e2e8f0; border-bottom:1px solid var(--stroke);
-             padding:10px 14px; font-weight:800; color:#0f172a; }
-  .wrap{ padding:16px; }
-  .panel{ background:var(--panel); border:1px solid var(--stroke); border-radius:14px;
-          box-shadow:0 3px 16px rgba(2,8,23,.06); padding:14px; }
-  .header-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; }
-  label{ font-size:11px; color:#0f172a; text-transform:uppercase; opacity:.75; letter-spacing:.35px; }
-  input[type="text"], select{ width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:10px; background:#fff; color:var(--text); }
-  input[type="text"]:focus, select:focus{ border-color:var(--cyan); box-shadow:0 0 0 3px rgba(6,182,212,.2); outline:none; }
-  .inline{ display:flex; align-items:center; gap:8px; }
-  .right-buttons{ display:flex; flex-direction:column; gap:10px; }
-  .btn{ background:#ffffff; border:1px solid #cbd5e1; padding:10px 12px; border-radius:12px; font-weight:800; cursor:pointer; color:#0f172a; }
-  .btn.orange{ background:#fff7ed; border-color:#fdba74; color:#9a3412; }
-  .btn.blue{ background:#eff6ff; border-color:#60a5fa; color:#1e3a8a; }
-  .section{ background:var(--panel-2); border:1px solid var(--stroke); border-radius:14px; padding:12px; }
-  .grid-4{ display:grid; grid-template-columns: repeat(4,1fr); gap:12px; }
-  .chips{ display:flex; gap:8px; flex-wrap:wrap; }
-  .chip{ padding:6px 12px; border:1px solid var(--cyan); border-radius:999px; background:#e0f2fe; color:#075985; font-weight:700; }
-  .chip.ok{ border-color:#22c55e; background:#dcfce7; color:#065f46; }
-  table{ width:100%; border-collapse:collapse; margin-top:12px; }
-  thead th{ background:linear-gradient(180deg,var(--grid-header),#3b82f6); color:var(--grid-header-text);
-            text-align:left; padding:10px; font-size:12px; }
-  tbody td{ padding:10px; border-bottom:1px solid #dbeafe; }
-  tbody tr:nth-child(odd){ background:var(--row-1); }
-  tbody tr:nth-child(even){ background:var(--row-2); }
-  .statusbar{ display:flex; gap:10px; margin-top:10px; }
-  .tag{ background:#e2e8f0; border:1px solid #cbd5e1; padding:5px 10px; border-radius:999px; font-weight:700; }
-  .footer-actions{ display:flex; align-items:center; gap:10px; margin-top:12px; }
-  .pill{ padding:10px 16px; border-radius:999px; border:1px solid #cbd5e1; background:#fff; font-weight:800; }
-  .pill.blue{ background:#e0f2fe; border-color:#06b6d4; color:#075985; }
-  .pill.orange{ background:#fff7ed; border-color:#fdba74; color:#9a3412; }
-  .pill.green{ background:#ecfdf5; border-color:#86efac; color:#14532d; }
-  textarea{ width:100%; height:56px; border:1px solid #cbd5e1; border-radius:10px; padding:10px; }
-  .title{ font-weight:900; color:#0f172a; margin-bottom:8px; }
+:root{
+  --bg:#f6f9ff; --card:#ffffff; --text:#0f2442; --muted:#6d7e96;
+  --primary:#2f7df6; --stroke:#d9e3f7; --table-head:#f0f6ff;
+  --ok:#16a34a; --warn:#f59e0b; --bad:#ef4444;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font:14px/1.45 system-ui;color:var(--text)}
+.app{max-width:1240px;margin:auto;padding:20px}
+
+h1{margin:0;font-size:20px}
+h2{font-size:13px;text-transform:uppercase;color:#5e7390;letter-spacing:.08em;margin:0 0 10px}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:14px;
+}
+
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.actions{display:flex;gap:8px}
+.btn{border:1px solid var(--stroke);background:#fff;padding:8px 12px;border-radius:10px}
+.btn.primary{background:var(--primary);color:#fff;border-color:#0a69e4}
+
+.form-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
+.col-3{grid-column:span 3}
+.col-6{grid-column:span 6}
+
+label{font-size:12px;color:#5f7088}
+input,select{
+  width:100%;padding:9px 10px;
+  border:1px solid var(--stroke);
+  border-radius:10px;
+  background:#fbfdff
+}
+
+.spacer{height:10px}
+
+/* Accordion */
+.accordion{border:1px solid var(--stroke);border-radius:12px;overflow:hidden}
+.accordion-header{
+  padding:12px 14px;
+  background:#eef3ff;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  font-weight:600;
+}
+.accordion-body{display:none;padding:14px}
+.accordion.open .accordion-body{display:block}
+
+/* Upload */
+.upload-box{
+  border:2px dashed var(--stroke);
+  border-radius:12px;
+  padding:18px;
+  text-align:center;
+  background:#fbfdff;
+  cursor:pointer;
+}
+.upload-box:hover{background:#f1f6ff}
+.upload-box input{display:none}
+
+/* Table */
+.table-wrap{border:1px solid var(--stroke);border-radius:12px;overflow:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px 12px;border-bottom:1px solid var(--stroke)}
+th{background:var(--table-head);font-size:12px;text-transform:uppercase}
+
+/* Pills */
+.pill{
+  padding:3px 10px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid var(--stroke)
+}
+.status-ok{background:#d1fae5;color:#065f46}
+.status-warn{background:#ffedd5;color:#7c2d12}
+.status-bad{background:#fee2e2;color:#991b1b}
 </style>
 </head>
+
 <body>
-  <div class="titlebar">Cadastros</div>
-  <div class="wrap">
+<div class="app">
 
-    <div class="panel">
-      <div class="title">Solicitação de Transferência / Fechamento da DT</div>
-      <div style="display:grid; grid-template-columns: 1fr 240px; gap:12px;">
-        <div class="header-grid">
-          <div><label>Manifestado</label><input type="text" value="PORTO"/></div>
-          <div><label>Armador</label><input type="text" value="—"/></div>
-          <div><label>Terminal</label><select><option>EUDMARCO - P1</option></select></div>
-          <div class="inline" style="align-self:end; justify-content:flex-end"><input type="checkbox" checked id="refresh1"><label for="refresh1">Refresh Autom.</label></div>
-          <div><label>DT</label><input type="text" value="016383-7/2025"/></div>
-          <div><label>Data Envio</label><input type="text" value="08/10/25 08:55"/></div>
-          <div><label>Data Resposta</label><input type="text" value="08/10/25 09:13"/></div>
-          <div><label>Pct. DT/GMC/GMV</label><input type="text" value="15/08/25 09:59"/></div>
-          <div><label>Tipo de Fechamento</label><input type="text" value="FECHAMENTO"/></div>
-          <div><label>Nº</label><input type="text" value="74"/></div>
-          <div></div><div></div>
-        </div>
-        <div class="right-buttons">
-          <button class="btn orange">Fechamento DT</button>
-          <button class="btn">DT - Complementar</button>
-          <button class="btn">Solicita Prévia</button>
-          <button class="btn blue">Fechamento Aut. (LAT)</button>
-        </div>
-      </div>
+<header>
+  <h1>Consulta CE (Siscomex)</h1>
+  <div class="actions">
+    <button class="btn">Limpar</button>
+    <button class="btn primary">Consultar Siscomex</button>
+  </div>
+</header>
 
-      <div class="section" style="margin-top:12px;">
-        <div class="grid-4">
-          <div><label>Filtro • DT</label><input type="text" value="/"></div>
-          <div><label>Tam. CNTR</label><select><option>—</option></select></div>
-          <div></div><div></div>
-        </div>
-        <div class="grid-4" style="margin-top:12px;">
-          <div class="panel" style="padding:10px;">
-            <div style="font-weight:800; margin-bottom:6px;">Solicitações</div>
-            <div class="inline" style="flex-direction:column; align-items:flex-start; gap:8px;">
-              <label><input type="checkbox"/> Não Enviadas</label>
-              <label><input type="checkbox"/> Aguardando Resp.</label>
-              <label><input type="checkbox"/> Resp. n ok</label>
-              <label><input type="checkbox" checked/> Resp. OK</label>
-            </div>
-          </div>
-          <div class="panel" style="padding:10px;">
-            <div style="font-weight:800; margin-bottom:6px;">Seleções</div>
-            <div class="inline" style="flex-direction:column; align-items:flex-start; gap:8px;">
-              <label><input type="checkbox"/> Sol. Cancelada</label>
-              <label><input type="checkbox" checked/> Captados</label>
-              <label><input type="checkbox"/> Duplicidade</label>
-              <label><input type="checkbox"/> Cntr - Guia Cancelada</label>
-            </div>
-          </div>
-          <div class="panel" style="padding:10px;">
-            <div style="font-weight:800; margin-bottom:6px;">Status</div>
-            <div class="chips">
-              <span class="chip ok">Liberado p/ captação</span>
-              <span class="chip">Liberado e Não Manifestado</span>
-            </div>
-          </div>
-          <div class="panel" style="padding:10px;">
-            <div style="font-weight:800; margin-bottom:6px;">Outros</div>
-            <div style="color:#334155;">Parâmetros adicionais…</div>
-          </div>
-        </div>
+<!-- Parâmetros -->
+<div class="card">
+<h2>Parâmetros de Pesquisa</h2>
 
-        <table>
-          <thead>
-            <tr>
-              <th style="width:90px">Id Sol</th>
-              <th style="width:90px">Cancelado</th>
-              <th style="width:120px">Sigla</th>
-              <th style="width:120px">Tam / Tipo</th>
-              <th>Status Solicitação (Container)</th>
-              <th style="width:160px">BL</th>
-              <th>Status da Solicitação (BL)</th>
-              <th>Importador</th>
-              <th style="width:70px">Paco</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>294425</td><td></td><td>CAAIU497505-0</td><td>40 • HIGH CUBE</td><td>TRANSFERÊNCIA AUTORIZADA</td><td>259093302</td><td>LIBERADO E NÃO-MANIFESTADO</td><td>H.M. WAY COMERCIO EXTE…</td><td>0002</td></tr>
-            <tr><td>294421</td><td></td><td>CAAIU574507-5</td><td>40 • HIGH CUBE</td><td>TRANSFERÊNCIA AUTORIZADA</td><td>259093399</td><td>LIBERADO E NÃO-MANIFESTADO</td><td>DEL-PIH FRETES INTERNAC…</td><td>0002</td></tr>
-            <tr><td>294420</td><td></td><td>CAAIU749759-6</td><td>40 • HIGH CUBE</td><td>TRANSFERÊNCIA AUTORIZADA</td><td>256288201</td><td>LIBERADO E NÃO-MANIFESTADO</td><td>MID-AMERICA OVERSEAS</td><td>0002</td></tr>
-            <tr><td>294419</td><td></td><td>CAAIU489158-8</td><td>40 • HIGH CUBE</td><td>TRANSFERÊNCIA AUTORIZADA</td><td>264872081</td><td>LIBERADO E NÃO-MANIFESTADO</td><td>SUNTRANS LOGISTICA</td><td>0002</td></tr>
-            <tr><td>294418</td><td></td><td>CAAIU597235-0</td><td>40 • HIGH CUBE</td><td>TRANSFERÊNCIA AUTORIZADA</td><td>262498121</td><td>LIBERADO E NÃO-MANIFESTADO</td><td>HAND LINE TRANSPORTES</td><td>0002</td></tr>
-          </tbody>
-        </table>
+<div class="form-grid">
+  <div class="col-3">
+    <label>Tipo de Chave</label>
+    <select><option>Contêiner</option><option>BL</option><option>CE</option></select>
+  </div>
+  <div class="col-6">
+    <label>Valor</label>
+    <input placeholder="Informe CE, BL ou contêiner">
+  </div>
+  <div class="col-3">
+    <label>Ambiente</label>
+    <select><option>Produção</option><option>Homologação</option></select>
+  </div>
+</div>
 
-        <div class="statusbar">
-          <span class="tag">90</span><span class="tag">65</span><span class="tag">Tot. 74</span>
-        </div>
+<div class="spacer"></div>
 
-        <div class="footer-actions">
-          <button class="pill blue">Solicita</button>
-          <button class="pill orange">Cancelamento de Solicitação</button>
-          <button class="pill green">Descancelar solicitação</button>
-        </div>
-      </div>
+<!-- Accordion Documentos -->
+<div class="accordion" id="accordionDocs">
+  <div class="accordion-header">
+    <span>📂 Documentos (Upload Inteligente)</span>
+    <span id="accIcon">▼</span>
+  </div>
+
+  <div class="accordion-body">
+
+    <div class="upload-box" id="uploadBox">
+      Clique ou arraste arquivos aqui (PDF / Imagem)
+      <input type="file" id="uploadDocs" multiple="">
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Arquivo</th>
+            <th>Vínculo</th>
+            <th>Data</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyDocs"></tbody>
+      </table>
     </div>
 
   </div>
-</body>
-</html>
+</div>
+</div>
+
+</div>
+
+<script>
+// Accordion
+const acc=document.getElementById('accordionDocs');
+acc.querySelector('.accordion-header').onclick=()=>{
+  acc.classList.toggle('open');
+  document.getElementById('accIcon').textContent=acc.classList.contains('open')?'▲':'▼';
+};
+
+// Helpers
+function tipoDoc(nome){
+  nome=nome.toLowerCase();
+  if(nome.includes('di'))return'DI';
+  if(nome.includes('du'))return'DU-E';
+  if(nome.includes('nf'))return'NF-e';
+  if(nome.includes('bl'))return'BL';
+  return'Outro';
+}
+function vinculoDoc(nome){
+  nome=nome.toLowerCase();
+  if(nome.includes('ce'))return'CE';
+  if(nome.includes('bl'))return'BL';
+  if(nome.match(/[a-z]{4}\d{7}/))return'Contêiner';
+  return'Manual';
+}
+function statusDoc(file){
+  if(file.type==='application/pdf')return'Validado';
+  if(file.type.startsWith('image/'))return'Pendente';
+  return'Rejeitado';
+}
+
+// Upload
+const upload=document.getElementById('uploadDocs');
+const box=document.getElementById('uploadBox');
+const tbody=document.getElementById('tbodyDocs');
+
+box.onclick=()=>upload.click();
+
+upload.onchange=()=>{
+  [...upload.files].forEach(f=>{
+    const status=statusDoc(f);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td>${tipoDoc(f.name)}</td>
+      <td>${f.name}</td>
+      <td>${vinculoDoc(f.name)}</td>
+      <td>${new Date().toISOString().slice(0,10)}</td>
+      <td><span class="pill ${
+        status==='Validado'?'status-ok':
+        status==='Pendente'?'status-warn':'status-bad'
+      }">${status}</span></td>`;
+    tbody.appendChild(tr);
+  });
+  upload.value='';
+};
+</script>
+
+
+
+</body></html>
