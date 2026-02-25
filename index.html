@@ -1,217 +1,274 @@
 <!DOCTYPE html>
-<!-- saved from url=(0082)file:///C:/Users/HxTos/Desktop/Processo%20de%20%20Capta%C3%A7%C3%A3o/siscomex.html -->
+<!-- saved from url=(0048)file:///C:/Users/HxTos/Desktop/rrv_hxtos_cy.html -->
 <html lang="pt-br"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HXtos CY • Consulta CE (Siscomex)</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HXtos CY - RRV</title>
 <style>
-:root{
-  --bg:#f6f9ff; --card:#ffffff; --text:#0f2442; --muted:#6d7e96;
-  --primary:#2f7df6; --stroke:#d9e3f7; --table-head:#f0f6ff;
-  --ok:#16a34a; --warn:#f59e0b; --bad:#ef4444;
+body {
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#f4f6f8;
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);font:14px/1.45 system-ui;color:var(--text)}
-.app{max-width:1240px;margin:auto;padding:20px}
-
-h1{margin:0;font-size:20px}
-h2{font-size:13px;text-transform:uppercase;color:#5e7390;letter-spacing:.08em;margin:0 0 10px}
-
-.card{
-  background:var(--card);
-  border:1px solid var(--stroke);
-  border-radius:14px;
-  padding:14px;
-  margin-bottom:14px;
+.header {
+    background:#0f8fa6;
+    color:white;
+    padding:15px;
+    text-align:center;
+    font-weight:bold;
+    font-size:18px;
 }
-
-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.actions{display:flex;gap:8px}
-.btn{border:1px solid var(--stroke);background:#fff;padding:8px 12px;border-radius:10px}
-.btn.primary{background:var(--primary);color:#fff;border-color:#0a69e4}
-
-.form-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
-.col-3{grid-column:span 3}
-.col-6{grid-column:span 6}
-
-label{font-size:12px;color:#5f7088}
-input,select{
-  width:100%;padding:9px 10px;
-  border:1px solid var(--stroke);
-  border-radius:10px;
-  background:#fbfdff
+.container {
+    padding:20px;
 }
-
-.spacer{height:10px}
-
-/* Accordion */
-.accordion{border:1px solid var(--stroke);border-radius:12px;overflow:hidden}
-.accordion-header{
-  padding:12px 14px;
-  background:#eef3ff;
-  cursor:pointer;
-  display:flex;
-  justify-content:space-between;
-  font-weight:600;
+.section {
+    background:white;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:8px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
 }
-.accordion-body{display:none;padding:14px}
-.accordion.open .accordion-body{display:block}
-
-/* Upload */
-.upload-box{
-  border:2px dashed var(--stroke);
-  border-radius:12px;
-  padding:18px;
-  text-align:center;
-  background:#fbfdff;
-  cursor:pointer;
+.section h3 {
+    margin-top:0;
+    color:#0f8fa6;
 }
-.upload-box:hover{background:#f1f6ff}
-.upload-box input{display:none}
-
-/* Table */
-.table-wrap{border:1px solid var(--stroke);border-radius:12px;overflow:auto}
-table{width:100%;border-collapse:collapse}
-th,td{padding:10px 12px;border-bottom:1px solid var(--stroke)}
-th{background:var(--table-head);font-size:12px;text-transform:uppercase}
-
-/* Pills */
-.pill{
-  padding:3px 10px;
-  border-radius:999px;
-  font-size:12px;
-  border:1px solid var(--stroke)
+.row {
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
 }
-.status-ok{background:#d1fae5;color:#065f46}
-.status-warn{background:#ffedd5;color:#7c2d12}
-.status-bad{background:#fee2e2;color:#991b1b}
+.field {
+    flex:1;
+    min-width:200px;
+    display:flex;
+    flex-direction:column;
+}
+.field label {
+    font-size:12px;
+    margin-bottom:4px;
+}
+.field input, .field select {
+    padding:8px;
+    border-radius:4px;
+    border:1px solid #ccc;
+}
+.button {
+    background:#0f8fa6;
+    color:white;
+    border:none;
+    padding:8px 14px;
+    border-radius:4px;
+    cursor:pointer;
+}
+.button.secondary {
+    background:#6c757d;
+}
+.cards {
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+.card {
+    background:#eef8fa;
+    padding:10px;
+    border-radius:6px;
+    width:200px;
+}
+.card button {
+    margin-top:6px;
+    width:100%;
+}
+.grid {
+    width:100%;
+    border-collapse:collapse;
+}
+.grid th, .grid td {
+    border:1px solid #ddd;
+    padding:8px;
+    font-size:13px;
+}
+.grid th {
+    background:#e9ecef;
+}
+.badge {
+    padding:4px 8px;
+    border-radius:12px;
+    font-size:12px;
+    color:white;
+}
+.badge.aprovada { background:#28a745; }
+.badge.draft { background:#ffc107; color:black; }
 </style>
 </head>
-
 <body>
-<div class="app">
 
-<header>
-  <h1>Consulta CE (Siscomex)</h1>
-  <div class="actions">
-    <button class="btn">Limpar</button>
-    <button class="btn primary">Consultar Siscomex</button>
-  </div>
-</header>
+<div class="header">HXtos CY - RRV (Requisição de Retirada de Vazios)</div>
 
-<!-- Parâmetros -->
+<div class="container">
+
+<!-- BLOCO IDENTIFICAÇÃO -->
+<div class="section">
+<h3>Identificação</h3>
+<div class="row">
+<div class="field">
+<label>Nº RRV</label>
+<input value="RRV-000123" readonly="">
+</div>
+<div class="field">
+<label>Status</label>
+<span class="badge draft">Draft</span>
+</div>
+<div class="field">
+<label>Deadline Retirada</label>
+<input type="datetime-local">
+</div>
+<div class="field">
+<label>Tipo de Operação</label>
+<select>
+<option>Exportação</option>
+<option>Reposição</option>
+<option>Reposicionamento</option>
+</select>
+</div>
+</div>
+</div>
+
+<!-- BLOCO ARMADOR -->
+<div class="section">
+<h3>Armador</h3>
+<div class="row">
+<div class="field">
+<label>Armador</label>
+<select>
+<option>MCC</option>
+<option>MSC</option>
+<option>MAERSK</option>
+</select>
+</div>
+<div class="field">
+<label>Contrato / Ref.</label>
+<input>
+</div>
+<div class="field">
+<label>Cliente Ref.</label>
+<input>
+</div>
+</div>
+</div>
+
+<!-- BLOCO LOCAL -->
+<div class="section">
+<h3>Local de Retirada</h3>
+<div class="row">
+<div class="field">
+<label>Pátio</label>
+<select>
+<option>CY Santos</option>
+<option>Redex Interior</option>
+</select>
+</div>
+<div class="field">
+<label>Quadra</label>
+<select>
+<option>Q1</option>
+<option>Q2</option>
+</select>
+</div>
+<div class="field">
+<label>Observação</label>
+<input>
+</div>
+</div>
+</div>
+
+<!-- BLOCO TRANSPORTADORA -->
+<div class="section">
+<h3>Transportadora</h3>
+<div class="row">
+<div class="field">
+<label>Transportadora</label>
+<select>
+<option>TransLog</option>
+<option>Rodomax</option>
+</select>
+</div>
+<div class="field">
+<label>Agendamento Vinculado</label>
+<select>
+<option>Sim</option>
+<option>Não</option>
+</select>
+</div>
+</div>
+</div>
+
+<!-- BLOCO CONTAINERS -->
+<div class="section">
+<h3>Contêineres Solicitados</h3>
+<div class="cards" id="cardsContainer">
 <div class="card">
-<h2>Parâmetros de Pesquisa</h2>
-
-<div class="form-grid">
-  <div class="col-3">
-    <label>Tipo de Chave</label>
-    <select><option>Contêiner</option><option>BL</option><option>CE</option></select>
-  </div>
-  <div class="col-6">
-    <label>Valor</label>
-    <input placeholder="Informe CE, BL ou contêiner">
-  </div>
-  <div class="col-3">
-    <label>Ambiente</label>
-    <select><option>Produção</option><option>Homologação</option></select>
-  </div>
+        <strong>20' Dry</strong><br>
+        ISO: 22G1<br>
+        Quantidade: 1<br>
+        <button onclick="this.parentElement.remove()">Remover</button>
+    </div><div class="card">
+        <strong>20' Dry</strong><br>
+        ISO: 22G1<br>
+        Quantidade: 1<br>
+        <button onclick="this.parentElement.remove()">Remover</button>
+    </div></div>
+<button class="button" onclick="addCard()">+ Adicionar Tipo</button>
 </div>
 
-<div class="spacer"></div>
-
-<!-- Accordion Documentos -->
-<div class="accordion" id="accordionDocs">
-  <div class="accordion-header">
-    <span>📂 Documentos (Upload Inteligente)</span>
-    <span id="accIcon">▼</span>
-  </div>
-
-  <div class="accordion-body">
-
-    <div class="upload-box" id="uploadBox">
-      Clique ou arraste arquivos aqui (PDF / Imagem)
-      <input type="file" id="uploadDocs" multiple="">
-    </div>
-
-    <div class="spacer"></div>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Tipo</th>
-            <th>Arquivo</th>
-            <th>Vínculo</th>
-            <th>Data</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="tbodyDocs"></tbody>
-      </table>
-    </div>
-
-  </div>
+<!-- BLOCO GRID -->
+<div class="section">
+<h3>RRVs Cadastradas</h3>
+<table class="grid">
+<thead>
+<tr>
+<th>Nº RRV</th>
+<th>Armador</th>
+<th>Deadline</th>
+<th>Transportadora</th>
+<th>Qtd</th>
+<th>Status</th>
+<th>Ações</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RRV-000120</td>
+<td>MCC</td>
+<td>25/02/2026</td>
+<td>TransLog</td>
+<td>5</td>
+<td><span class="badge aprovada">Aprovada</span></td>
+<td><button class="button secondary">Editar</button></td>
+</tr>
+</tbody>
+</table>
 </div>
+
+<div style="text-align:right;">
+<button class="button secondary">Cancelar</button>
+<button class="button">Salvar</button>
 </div>
 
 </div>
 
 <script>
-// Accordion
-const acc=document.getElementById('accordionDocs');
-acc.querySelector('.accordion-header').onclick=()=>{
-  acc.classList.toggle('open');
-  document.getElementById('accIcon').textContent=acc.classList.contains('open')?'▲':'▼';
-};
-
-// Helpers
-function tipoDoc(nome){
-  nome=nome.toLowerCase();
-  if(nome.includes('di'))return'DI';
-  if(nome.includes('du'))return'DU-E';
-  if(nome.includes('nf'))return'NF-e';
-  if(nome.includes('bl'))return'BL';
-  return'Outro';
+function addCard(){
+    const container = document.getElementById("cardsContainer");
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+        <strong>20' Dry</strong><br>
+        ISO: 22G1<br>
+        Quantidade: 1<br>
+        <button onclick="this.parentElement.remove()">Remover</button>
+    `;
+    container.appendChild(card);
 }
-function vinculoDoc(nome){
-  nome=nome.toLowerCase();
-  if(nome.includes('ce'))return'CE';
-  if(nome.includes('bl'))return'BL';
-  if(nome.match(/[a-z]{4}\d{7}/))return'Contêiner';
-  return'Manual';
-}
-function statusDoc(file){
-  if(file.type==='application/pdf')return'Validado';
-  if(file.type.startsWith('image/'))return'Pendente';
-  return'Rejeitado';
-}
-
-// Upload
-const upload=document.getElementById('uploadDocs');
-const box=document.getElementById('uploadBox');
-const tbody=document.getElementById('tbodyDocs');
-
-box.onclick=()=>upload.click();
-
-upload.onchange=()=>{
-  [...upload.files].forEach(f=>{
-    const status=statusDoc(f);
-    const tr=document.createElement('tr');
-    tr.innerHTML=`
-      <td>${tipoDoc(f.name)}</td>
-      <td>${f.name}</td>
-      <td>${vinculoDoc(f.name)}</td>
-      <td>${new Date().toISOString().slice(0,10)}</td>
-      <td><span class="pill ${
-        status==='Validado'?'status-ok':
-        status==='Pendente'?'status-warn':'status-bad'
-      }">${status}</span></td>`;
-    tbody.appendChild(tr);
-  });
-  upload.value='';
-};
 </script>
 
 
